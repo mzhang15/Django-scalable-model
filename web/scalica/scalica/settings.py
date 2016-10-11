@@ -104,7 +104,7 @@ DATABASES = {
   'default': {
     'ENGINE': 'django.db.backends.mysql',
     'OPTIONS': {
-      'read_default_file': os.path.join(BASE_DIR, '..', '..', 'db', 'my.cnf'),
+      'read_default_file': os.path.join(BASE_DIR, '..', 'depot', 'db', 'my.cnf'),
     },
   }
 }
@@ -125,7 +125,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
-STATIC_ROOT = '/var/www/site/static/
+STATIC_ROOT = '/var/www/site/static/'
 
 # Logging
 LOGGING = {

@@ -15,4 +15,4 @@ if [ $# -gt 0 ]; then
   esac
 fi
 
-mysql -u root -p < ${sql_file}
+mysql -u root < ${sql_file}

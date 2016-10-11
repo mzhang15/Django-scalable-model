@@ -43,6 +43,7 @@ git checkout httpd
 cd db
 ./install_db.sh
 cd ../../
+source depot/env/bin/activate
 mv depot/web/scalica/ scalica
 cd scalica
 python manage.py makemigrations
@@ -52,7 +53,7 @@ python manage.py collectstatic --noinput
 # Use the following config.
 cat <<EOF > /etc/apache2/sites-available/scalica.conf
 WSGIScriptAlias / /var/www/site/scalica/scalica/wsgi.py
-WSGIDaemonProcess scalica python-path=/var/www/site/scalica:/var/www/site/lib/python2.7/site-packages
+WSGIDaemonProcess scalica python-path=/var/www/site/scalica:/var/www/site/depot/env/lib/python2.7/site-packages
 WSGIProcessGroup scalica
 <Directory /var/www/site/scalica/scalica>
   <Files wsgi.py>
