@@ -46,7 +46,7 @@ cd ../../
 source depot/env/bin/activate
 mv depot/web/scalica/ scalica
 cd scalica
-python manage.py makemigrations
+python manage.py makemigrations micro
 python manage.py migrate
 python manage.py collectstatic --noinput
 
