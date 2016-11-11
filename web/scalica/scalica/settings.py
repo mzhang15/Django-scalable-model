@@ -98,16 +98,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'scalica.wsgi.application'
 
-
-# Database
-DATABASES = {
-  'default': {
-    'ENGINE': 'django.db.backends.mysql',
-    'OPTIONS': {
-      'read_default_file': os.path.join(BASE_DIR, '..', 'depot', 'db', 'my.cnf'),
-    },
-  }
-}
+# Database options are read from a different file, so we can change them per
+# deployment.
+execfile(os.path.join(BASE_DIR, '..', '..', 'db', 'db_settings.py'))
 
 # Database routers go here:
 # DATABASE_ROUTERS = ['micro.routers.UserRouter']
