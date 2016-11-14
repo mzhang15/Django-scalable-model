@@ -7,7 +7,7 @@
 {% if form %}
   <form action="/micro/follow/" method="post">
     {% csrf_token %}
-    <input type="hidden" id="id_followee" name="followee" value="{{ stream_user.id }}" />
+    <input type="hidden" id="id_followee" name="followee_id" value="{{ stream_user.user_id }}" />
     <input type="submit" value="Follow" />
   </form>
 {% endif %}

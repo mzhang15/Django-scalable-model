@@ -15,4 +15,6 @@ if [ $# -gt 0 ]; then
   esac
 fi
 
-mysql -u root < ${sql_file}
+for db in `seq 2 4`; do
+  mysql -u root -p -h 172.17.0.$db < ${sql_file}
+done

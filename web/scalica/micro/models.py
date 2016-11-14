@@ -4,8 +4,18 @@ from django.conf import settings
 from django.db import models
 from django.forms import ModelForm, TextInput
 
+# Note: For now, all fields that were previously
+# foreign keys to the auth User, must be named user_id.
+# They CAN have Profile as a Foreign Key.
+class Profile(models.Model):
+  user_id = models.BigIntegerField(primary_key=True)
+  username = models.CharField(max_length=30, unique=True)
+  first_name = models.CharField('first name', max_length=30, blank=True)
+  last_name = models.CharField('last name', max_length=30, blank=True)
+  # User data that is non-auth-related can go here (e.g. avatar)
+
 class Post(models.Model):
-  user = models.ForeignKey(settings.AUTH_USER_MODEL)
+  user_id = models.BigIntegerField(db_index=True)
   text = models.CharField(max_length=256, default="")
   pub_date = models.DateTimeField('date_posted')
   def __str__(self):
@@ -13,16 +23,14 @@ class Post(models.Model):
       desc = self.text
     else:
       desc = self.text[0:16]
-    return self.user.username + ':' + desc
+    return str(self.user_id) + ':' + desc
 
 class Following(models.Model):
-  follower = models.ForeignKey(settings.AUTH_USER_MODEL,
-                               related_name="user_follows")
-  followee = models.ForeignKey(settings.AUTH_USER_MODEL,
-                               related_name="user_followed")
-  follow_date = models.DateTimeField('follow data')
+  user_id = models.BigIntegerField(db_index=True)
+  followee_id = models.BigIntegerField(db_index=True)
+  follow_date = models.DateTimeField('follow date')
   def __str__(self):
-    return self.follower.username + "->" + self.followee.username
+    return std(self.user_id) + "->" + str(self.followee_id)
 
 # Model Forms
 class PostForm(ModelForm):
@@ -36,7 +44,7 @@ class PostForm(ModelForm):
 class FollowingForm(ModelForm):
   class Meta:
     model = Following
-    fields = ('followee',)
+    fields = ('followee_id',)
 
 class MyUserCreationForm(UserCreationForm):
   class Meta(UserCreationForm.Meta):

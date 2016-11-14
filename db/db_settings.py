@@ -6,7 +6,7 @@ DATABASES = {
     'NAME': 'scalica',
     'USER': 'appserver',
     'PASSWORD': 'foobarzoot',
-    'HOST': '127.0.0.1',
+    'HOST': '172.17.0.2',
     'PORT': '3306',
   },
   'db1': {
@@ -14,16 +14,16 @@ DATABASES = {
     'NAME': 'scalica',
     'USER': 'appserver',
     'PASSWORD': 'foobarzoot',
-    'HOST': '127.0.0.1',
-    'PORT': '3307',
+    'HOST': '172.17.0.3',
+    'PORT': '3306',
   },
   'db2': {
     'ENGINE': 'django.db.backends.mysql',
     'NAME': 'scalica',
     'USER': 'appserver',
     'PASSWORD': 'foobarzoot',
-    'HOST': '127.0.0.1',
-    'PORT': '3308',
+    'HOST': '172.17.0.4',
+    'PORT': '3306',
   },
 }
 
