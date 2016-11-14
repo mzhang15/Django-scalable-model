@@ -18,8 +18,8 @@ _sym_db = _symbol_database.Default()
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='scalica.proto',
   package='processor',
-  syntax='proto2',
-  serialized_pb=_b('\n\rscalica.proto\x12\tprocessor\"D\n\x12ProcessPostRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\x03\x12\x0f\n\x07post_id\x18\x02 \x01(\x03\x12\x0c\n\x04text\x18\x03 \x01(\t\"\"\n\x10ProcessPostReply\x12\x0e\n\x06\x64igest\x18\x01 \x01(\t2X\n\tProcessor\x12K\n\x0bProcessPost\x12\x1d.processor.ProcessPostRequest\x1a\x1b.processor.ProcessPostReply\"\x00\x42\"\n net.yairsovran.scalica.processor')
+  syntax='proto3',
+  serialized_pb=_b('\n\rscalica.proto\x12\tprocessor\"D\n\x12ProcessPostRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\x03\x12\x0f\n\x07post_id\x18\x02 \x01(\x03\x12\x0c\n\x04text\x18\x03 \x01(\t\"\"\n\x10ProcessPostReply\x12\x0e\n\x06\x64igest\x18\x01 \x01(\t2X\n\tProcessor\x12K\n\x0bProcessPost\x12\x1d.processor.ProcessPostRequest\x1a\x1b.processor.ProcessPostReply\"\x00\x42\"\n net.yairsovran.scalica.processorb\x06proto3')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -62,7 +62,7 @@ _PROCESSPOSTREQUEST = _descriptor.Descriptor(
   ],
   options=None,
   is_extendable=False,
-  syntax='proto2',
+  syntax='proto3',
   extension_ranges=[],
   oneofs=[
   ],
@@ -93,7 +93,7 @@ _PROCESSPOSTREPLY = _descriptor.Descriptor(
   ],
   options=None,
   is_extendable=False,
-  syntax='proto2',
+  syntax='proto3',
   extension_ranges=[],
   oneofs=[
   ],

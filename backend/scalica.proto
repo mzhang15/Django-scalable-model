@@ -1,4 +1,4 @@
-syntax = "proto2";
+syntax = "proto3";
 
 option java_package = "net.yairsovran.scalica.processor";
 
@@ -11,11 +11,11 @@ service Processor {
 }
 
 message ProcessPostRequest {
-  optional int64 user_id = 1;  // User posting.
-  optional int64 post_id = 2;  // The ID of the post.
-  optional string text = 3;    // The text of the post.
+  int64 user_id = 1;  // User posting.
+  int64 post_id = 2;  // The ID of the post.
+  string text = 3;    // The text of the post.
 }
 
 message ProcessPostReply {
-  optional string digest = 1;  // The sha256 digest of request.text.
+  string digest = 1;  // The sha256 digest of request.text.
 }
