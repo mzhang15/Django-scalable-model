@@ -34,6 +34,7 @@ LOGIN_REDIRECT_URL = '/micro/home/'
 
 INSTALLED_APPS = (
     'micro', # Keep this first, so templates are first found in this app.
+    'processor',
     'utils',
     'django.contrib.admin',
     'django.contrib.auth',

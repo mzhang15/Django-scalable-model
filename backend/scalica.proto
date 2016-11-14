@@ -1,0 +1,21 @@
+syntax = "proto2";
+
+option java_package = "net.yairsovran.scalica.processor";
+
+package processor;
+
+service Processor {
+  // Do something with a newly-received Post from a user.
+  // For now, just returns the SHA256 digest of the post's text.
+  rpc ProcessPost (ProcessPostRequest) returns (ProcessPostReply) {}
+}
+
+message ProcessPostRequest {
+  optional int64 user_id = 1;  // User posting.
+  optional int64 post_id = 2;  // The ID of the post.
+  optional string text = 3;    // The text of the post.
+}
+
+message ProcessPostReply {
+  optional string digest = 1;  // The sha256 digest of request.text.
+}

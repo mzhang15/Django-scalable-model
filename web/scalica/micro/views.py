@@ -9,7 +9,7 @@ from .models import Following, Post, Profile
 from .models import FollowingForm, PostForm, MyUserCreationForm
 from utils.hints import set_user_for_sharding
 from routers import bucket_users_into_shards
-#from processor import processor
+from processor import processor
 
 
 # Anonymous views
