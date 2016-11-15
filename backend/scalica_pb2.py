@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='scalica.proto',
   package='processor',
   syntax='proto3',
-  serialized_pb=_b('\n\rscalica.proto\x12\tprocessor\"D\n\x12ProcessPostRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\x03\x12\x0f\n\x07post_id\x18\x02 \x01(\x03\x12\x0c\n\x04text\x18\x03 \x01(\t\"\"\n\x10ProcessPostReply\x12\x0e\n\x06\x64igest\x18\x01 \x01(\t2X\n\tProcessor\x12K\n\x0bProcessPost\x12\x1d.processor.ProcessPostRequest\x1a\x1b.processor.ProcessPostReply\"\x00\x42\"\n net.yairsovran.scalica.processorb\x06proto3')
+  serialized_pb=_b('\n\rscalica.proto\x12\tprocessor\"D\n\x12ProcessPostRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\x03\x12\x0f\n\x07post_id\x18\x02 \x01(\x03\x12\x0c\n\x04text\x18\x03 \x01(\t\":\n\x10ProcessPostReply\x12\x0e\n\x06\x64igest\x18\x01 \x01(\t\x12\x16\n\x0e\x61ugmented_text\x18\x02 \x01(\t2X\n\tProcessor\x12K\n\x0bProcessPost\x12\x1d.processor.ProcessPostRequest\x1a\x1b.processor.ProcessPostReply\"\x00\x42\"\n net.yairsovran.scalica.processorb\x06proto3')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -85,6 +85,13 @@ _PROCESSPOSTREPLY = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='augmented_text', full_name='processor.ProcessPostReply.augmented_text', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -98,7 +105,7 @@ _PROCESSPOSTREPLY = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=98,
-  serialized_end=132,
+  serialized_end=156,
 )
 
 DESCRIPTOR.message_types_by_name['ProcessPostRequest'] = _PROCESSPOSTREQUEST
@@ -147,7 +154,8 @@ class ProcessorServicer(object):
 
   def ProcessPost(self, request, context):
     """Do something with a newly-received Post from a user.
-    For now, just returns the SHA256 digest of the post's text.
+    For now, just returns the SHA256 digest of the post's text
+
     """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
@@ -175,7 +183,8 @@ class BetaProcessorServicer(object):
   only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0."""
   def ProcessPost(self, request, context):
     """Do something with a newly-received Post from a user.
-    For now, just returns the SHA256 digest of the post's text.
+    For now, just returns the SHA256 digest of the post's text
+
     """
     context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
 
@@ -188,7 +197,8 @@ class BetaProcessorStub(object):
   only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0."""
   def ProcessPost(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
     """Do something with a newly-received Post from a user.
-    For now, just returns the SHA256 digest of the post's text.
+    For now, just returns the SHA256 digest of the post's text
+
     """
     raise NotImplementedError()
   ProcessPost.future = None

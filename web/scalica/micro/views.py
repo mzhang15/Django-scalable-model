@@ -11,6 +11,7 @@ from utils.hints import set_user_for_sharding
 from routers import bucket_users_into_shards
 from processor import processor
 
+USE_RPC = False
 
 # Anonymous views
 #################
@@ -120,9 +121,10 @@ def post(request):
     new_post = form.save(commit=False)
     new_post.user_id = request.user.id
     new_post.pub_date = timezone.now()
-    new_post.save()
     # Make an RPC call to a backend service to process the post.
-    # processor.process_post(new_post.user_id, new_post.id, new_post.text)
+    if USE_RPC:
+      new_post.text = processor.process_post(new_post.user_id, new_post.id, new_post.text)
+    new_post.save()
     return home(request)
   else:
     form = PostForm

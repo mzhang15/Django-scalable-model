@@ -9,5 +9,5 @@ def process_post(user_id, post_id, text):
   request = scalica_pb2.ProcessPostRequest(
           user_id=user_id, post_id=post_id, text=text)
   response = stub.ProcessPost(request, _TIMEOUT_SECONDS)
-  return response.digest
+  return response.augmented_text
 
