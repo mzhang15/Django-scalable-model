@@ -1,16 +1,47 @@
 from django.db import models
-
 # Create your models here.
+class ShardManager(models.Manager):
+    def get_queryset(self):
+        q = super().get_queryset()
+        #if current model is the root models
+        if hasattr(q.model,'is_root'):
+            print(dir(q.query))
+            #how to get the name of the query fields?
+            #e.g. if input has pk, use as shard_key
+            try:
+                instance = q._hints['instance']
+            except KeyError:
+                print('no instance in hint')
+        #if current model is not Root
+            #if current model has a foreign field points to Root
+                #if somehow the query points to an root instance
+
+            #if not, go to not sharable db
+        return q
+
+
 class ShardModel(models.Model):
-    is_root = False
+    objects = ShardManager()
     class Meta:
         abstract = True
-        base_manager_name = 'shardManager'
-
- # TODO: what if user specify the root model multiple times
     def save(self, *args, **kwargs):
-        # if current model is the root model
-        for att
-        # if current model can be sharded
+        # set the root model
+        if (hasattr(self,'shard_key') and isinstance(self._meta.get_field('shard_key'), models.ForeignKey)):
+            self.shard_by = super().serializable_value('shard_key')
+            super().save(*args, **kwargs)
+        elif (hasattr(self,'is_root') and self.is_root):
+            self.shard_by = super().serializable_value(self._meta.pk.name)
+            super().save(*args, **kwargs)
+        return
 
-        # if current  mode cdbdban't be sharded
+class Root(ShardModel):
+    class Meta:
+        app_label = 'app'
+    is_root = models.BooleanField(default = True)
+    name = models.CharField(max_length = 255,primary_key=True)
+
+class Child(ShardModel):
+    class Meta:
+        app_label = 'app'
+    name = models.CharField(max_length = 10, primary_key = True)
+    shard_key = models.ForeignKey('Root', null=True,on_delete=models.CASCADE)
