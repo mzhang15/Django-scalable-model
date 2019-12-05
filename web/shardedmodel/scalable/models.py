@@ -33,10 +33,10 @@ class ShardModel(models.Model):
     def save(self, *args, **kwargs):
         # set the root model
         if (hasattr(self,'shard_key') and isinstance(self._meta.get_field('shard_key'), models.ForeignKey)):
-            self.shard_by = super().serializable_value('shard_key')
+            self.shard_by = [super().serializable_value('shard_key')]
             super().save(*args, **kwargs)
         elif (hasattr(self,'is_root') and self.is_root):
-            self.shard_by = super().serializable_value(self._meta.pk.name)
+            self.shard_by = [super().serializable_value(self._meta.pk.name)]
             super().save(*args, **kwargs)
         return
 
