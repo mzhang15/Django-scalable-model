@@ -13,20 +13,16 @@ class Mapping(models.Model):
 class ShardManager(models.Manager):
     def get_queryset(self):
         q = super().get_queryset()
+        queries = q.values()
+        q._hints['shard_by'] = []
+        #print(q.values())
         #if current model is the root models
         if hasattr(q.model,'is_root'):
-            print(dir(q.query))
-            #how to get the name of the query fields?
-            #e.g. if input has pk, use as shard_key
-            try:
-                instance = q._hints['instance']
-            except KeyError:
-                print('no instance in hint')
-        #if current model is not Root
-            #if current model has a foreign field points to Root
-                #if somehow the query points to an root instance
-
-            #if not, go to not sharable db
+            for query in queries:
+                q._hints['shard_by'].append(query.get(q.model._meta.pk.name)) if query.get(q.model._meta.pk.name) != None else None
+        elif hasattr(q.model, 'shard_key') :
+            for query in queries:
+                q._hints['shard_by'].append(query.get('shard_key')) if query.get('shard_key') != None else None
         return q
 
 
