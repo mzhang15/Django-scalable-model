@@ -118,3 +118,20 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+DJANGO_AUTOSHARD = {
+    "NODES": {
+        'db1': {
+            'PASSWORD': 'foobarzoot',
+            'HOST': '172.17.0.3',
+            'PORT': '3306',
+            'RANGE': range(10)
+        },
+        'db2': {
+            'PASSWORD': 'foobarzoot',
+            'HOST': '172.17.0.4',
+            'PORT': '3306',
+            'RANGE': range(10, 20)
+        }
+    }
+}
