@@ -77,15 +77,42 @@ WSGI_APPLICATION = 'shardedmodel.wsgi.application'
 
 DATABASES = {
     'default': {
-        # 'ENGINE': 'django.db.backends.mysql',
-        # 'NAME': 'app',
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'app',
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         'USER': 'root',
         'PASSWORD': 'zyy1997',
         'HOST': 'localhost',
         'PORT': '',
-    }
+    },
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    # },
+    # 'auth_db': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'demo',
+    #     'USER': 'appserver',
+    #     'PASSWORD': '',
+    #     'HOST': '',
+    #     'PORT': '3306',
+    # },
+    # 'db1': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'demo',
+    #     'USER': 'appserver',
+    #     'PASSWORD': '',
+    #     'HOST': '',
+    #     'PORT': '3307',
+    # },
+    # 'db2': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'demo',
+    #     'USER': 'appserver',
+    #     'PASSWORD': '',
+    #     'HOST': '',
+    #     'PORT': '3308',
+    # },
 }
 # DATABASE_ROUTERS = ['scalable.router.ShardRouter']
 
