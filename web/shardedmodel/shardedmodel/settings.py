@@ -78,12 +78,14 @@ WSGI_APPLICATION = 'shardedmodel.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'OPTIONS': {
-            'read_default_file': '/etc/mysql/my.cnf',
-        },
-    },
+        'NAME': 'app',
+        'USER': 'root',
+        'PASSWORD': 'zyy1997',
+        'HOST': 'localhost',
+        'PORT': '',
+    }
 }
-DATABASE_ROUTERS = ['scalable.router.ShardRouter']
+# DATABASE_ROUTERS = ['scalable.router.ShardRouter']
 
 
 # Password validation
