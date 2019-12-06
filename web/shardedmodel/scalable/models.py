@@ -15,7 +15,7 @@ class ShardManager(models.Manager):
         q = super().get_queryset()
         queries = q.values()
         q._hints['shard_by'] = []
-        #print(q.values())
+        print(q.values())
         #if current model is the root models
         if hasattr(q.model,'is_root'):
             for query in queries:
