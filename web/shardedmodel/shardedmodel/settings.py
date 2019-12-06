@@ -56,7 +56,7 @@ ROOT_URLCONF = 'shardedmodel.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -101,7 +101,7 @@ DATABASES = {
     'PORT': '3306',
   },
 }
-# DATABASE_ROUTERS = ['scalable.router.ShardRouter']
+DATABASE_ROUTERS = ['app.router.ShardRouter']
 
 
 # Password validation
