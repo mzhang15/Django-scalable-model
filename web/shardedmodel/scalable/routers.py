@@ -13,8 +13,7 @@ def logical_to_physical(logical):
 
 class ShardRouter(object):
     def _database_of(self, shard_key):
-        #if shard key is empty or is none
-        if (shard_key is None or len(shard_key) == 0):
+        if shard_key is None or len(shard_key) == 0:
             return 'default'
         return logical_to_physical(logical_shard_of(shard_key[0]))
 
@@ -25,6 +24,7 @@ class ShardRouter(object):
         db = None
         try:
             instance = hints['instance']
+            print("instance", hints['instance'])
             db = self._database_of(instance.shard_by)
         except KeyError:
             try:
