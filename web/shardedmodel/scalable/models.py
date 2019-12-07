@@ -16,10 +16,8 @@ class Mapping(models.Model):
 class ShardManager(models.Manager):
     def get_queryset(self):
         q = super().get_queryset()
-        print(q)
         queries = q.values()
         q._hints['shard_by'] = []
-        print(q.values())
         #if current model is the root models
         if hasattr(q.model,'is_root'):
             for query in queries:
@@ -37,12 +35,14 @@ class ShardModel(models.Model):
     def save(self, *args, **kwargs):
         # set the root model
         if (hasattr(self,'shard_key') and isinstance(self._meta.get_field('shard_key'), models.ForeignKey)):
+            print('save')
             self.shard_by = [super().serializable_value('shard_key')]
             super().save(*args, **kwargs)
+            print(self.shard_by)
         elif (hasattr(self,'is_root') and self.is_root):
-            print(self._meta.pk)
             self.shard_by = [super().serializable_value(self._meta.pk.name)]
             super().save(*args, **kwargs)
+            print(self.shard_by)
         return
 
 class Root(ShardModel):
@@ -52,10 +52,3 @@ class Root(ShardModel):
 class Child(ShardModel):
     name = models.CharField(max_length = 10, primary_key = True)
     shard_key = models.ForeignKey('Root', null=True,on_delete=models.CASCADE)
-
-class User(ShardModel):
-    is_root = models.BooleanField(default = True)
-    name = models.CharField(max_length = 255,primary_key=True)
-
-class Post(ShardModel):
-    shard_key = models.ForeignKey('Root', null=True, on_delete=models.CASCADE)

@@ -1,10 +1,10 @@
-from scalable import models
-from scalable import utils
-from django.conf import settings
-from scalable.models import Mapping
+from .models import Mapping
+from .utils import MappingDict
+
+NUM_LOGICAL_SHARDS = 1024
 
 def logical_shard_of(shard_key):
-    return shard_key % NUM_LOGICAL_SHARDS
+    return hash(shard_key) % NUM_LOGICAL_SHARDS
 
 def logical_to_physical(logical):
     mapping_dict = MappingDict(Mapping.objects.all())
@@ -13,23 +13,29 @@ def logical_to_physical(logical):
 
 class ShardRouter(object):
     def _database_of(self, shard_key):
-        return logical_to_physical(logical_shard_of(shard_key))
+        #if shard key is empty or is none
+        if (shard_key is None or len(shard_key) == 0):
+            return 'default'
+        return logical_to_physical(logical_shard_of(shard_key[0]))
 
     def db_for_write(self, model, **hints):
-        print("Writing to DB: ")
         return self.db_for_read(model, **hints)
 
     def db_for_read(self, model, **hints):
-        if model._meta.app_label != 'demo':
-            print('default')
-            return 'default'
+        db = None
         try:
-            shard_keys = hints['instance'].shard_by
-        except:
+            instance = hints['instance']
+            db = self._database_of(instance.shard_by)
+        except KeyError:
             try:
-                shard_keys = hints['shard_by']
-            except:
-                print('default')
-                return 'default'
-        print(_database_of(shard_keys[0]['name']))
-        return _database_of(shard_keys[0]['name'])
+                db = self._database_of(hints['shard_by'])
+            except KeyError:
+                db = 'default'
+        #if save() is called by django's own model, can't go through shard manager, thus instance won't have a shard_by field
+        except AttributeError:
+            db = 'default'
+        return db
+
+
+    def allow_migrate(self, db, app_label, model=None, **hints):
+        return True
