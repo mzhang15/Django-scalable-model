@@ -75,10 +75,17 @@ WSGI_APPLICATION = 'shardedmodel.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 DATABASES = {
-  'default': { },
+  'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME':'app',
+        'USER': 'root',
+        'PASSWORD': 'zyy1997',
+        'HOST': 'localhost',
+        'PORT': '',
+  },
   'auth_db': {
     'ENGINE': 'django.db.backends.mysql',
-    'NAME': 'scalica',
+    'NAME': 'app',
     'USER': 'appserver',
     'PASSWORD': 'foobarzoot',
     'HOST': '172.17.0.2',
@@ -86,7 +93,7 @@ DATABASES = {
   },
   'db1': {
     'ENGINE': 'django.db.backends.mysql',
-    'NAME': 'scalica',
+    'NAME': 'app',
     'USER': 'appserver',
     'PASSWORD': 'foobarzoot',
     'HOST': '172.17.0.3',
@@ -94,15 +101,15 @@ DATABASES = {
   },
   'db2': {
     'ENGINE': 'django.db.backends.mysql',
-    'NAME': 'scalica',
+    'NAME': 'app',
     'USER': 'appserver',
     'PASSWORD': 'foobarzoot',
     'HOST': '172.17.0.4',
     'PORT': '3306',
   },
 }
-DATABASE_ROUTERS = ['app.router.ShardRouter']
 
+DATABASE_ROUTERS = ['scalable.routers.ShardRouter']
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -144,3 +151,5 @@ STATIC_URL = '/static/'
 
 
 NUM_LOGICAL_SHARDS = 10
+
+ALLOWED_HOSTS = ['35.223.59.213', 'localhost', '127.0.0.1']
