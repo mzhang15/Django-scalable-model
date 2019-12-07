@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'app'
+    'app',
+    'demo.apps.DemoConfig',
 ]
 
 MIDDLEWARE = [
@@ -78,17 +79,11 @@ WSGI_APPLICATION = 'shardedmodel.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-<<<<<<< HEAD
-        'NAME': 'app',
+        'NAME': 'default_db',
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        'USER': 'root',
-        'PASSWORD': 'zyy1997',
-=======
-        'NAME': 'default_db',
         'USER': 'appserver',
         'PASSWORD': '1234',
->>>>>>> modified setting.py for default db dict
         'HOST': 'localhost',
         'PORT': '',
     },

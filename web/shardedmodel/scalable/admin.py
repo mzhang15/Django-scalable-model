@@ -20,12 +20,12 @@ class MappingAdmin(admin.ModelAdmin):
     #     'id'
     # )
 
-    # def get_urls(self):
-    #     urls = super().get_urls
-    #     custom_urls = [
-    #         path('migrate/', self.process_migrate),
-    #     ]
-    #     return custom_urls + urls
+    def get_urls(self):
+        urls = super().get_urls()
+        my_urls = [
+            path('migrate/', self.process_migrate),
+        ]
+        return my_urls + urls
 
     def mapping_actions(self, obj):
         return format_html(
@@ -63,15 +63,19 @@ class MappingAdmin(admin.ModelAdmin):
                         current_app=self.admin_site.name,
                     )
                     return HttpResponseRedirect(url)
-        context = self.admin_site.each_context(request)
-        context['opts'] = self.model._meta
-        context['form'] = form
-        context['mapping'] = mapping
-        return TemplateResponse(
-            request,
-            'admin/scalable/mapping/mapping_action.html',
-            context,
-        )
+        # context = dict(
+        #    # Include common variables for rendering the admin template.
+        #    self.admin_site.each_context(request),
+        #    # Anything else you want in the context...
+        # #    'opts' = self.model._meta,
+        #    'form' = form,
+        #    'mapping' = mapping,
+        # )
+        # return TemplateResponse(
+        #     request,
+        #     'admin/scalable/mapping/mapping_action.html',
+        #     context,
+        # )
 
 admin.site.register(Mapping, MappingAdmin)
 
