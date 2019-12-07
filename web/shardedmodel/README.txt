@@ -2,7 +2,7 @@ sudo apt-get install libssl-dev
 
 setup database locally:
 
-systemctl service mysql start // start a mysql server
+sudo service mysql start // start a mysql server
 systemctl status mysql.service // check if the server is running
 
 sudo mysql -u root -p // login to mysql as root user
