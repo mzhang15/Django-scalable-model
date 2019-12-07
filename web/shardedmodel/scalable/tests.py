@@ -1,9 +1,8 @@
 
 # Create your tests here.
 from django.test import TestCase
-from scalable.models import Root, Child, Mapping
+from scalable.models import Root, Child, Mapping, ShardModel
 from scalable.utils import MappingDict
-from django.db.models import ShardModel
 from django.db import models
 # Create your tests here.
 
@@ -11,9 +10,8 @@ class shardTestCase(TestCase):
     def test_correct_shard_key(self):
         Root.objects.create(name='test')
         Root.objects.create(name='test1')
-        print('######Gets:')
         test1 = Root.objects.get(name= 'test1')
-        
+
     def test_mapping_table(self):
         print('mapping:')
         Mapping.objects.create(min_shard=0, max_shard=3, perm=0, target1='db1')
