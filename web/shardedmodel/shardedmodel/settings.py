@@ -25,7 +25,7 @@ SECRET_KEY = 'luk6kuutkox2-xm-^+dnzw-yl2v!et7!c0z&iwgamw*=h7=euw'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['35.223.59.213', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -84,30 +84,30 @@ DATABASES = {
         'USER': 'appserver',
         'PASSWORD': '1234',
         'HOST': 'localhost',
-        'PORT': '',
+        'PORT': '3306',
   },
-  'auth_db': {
-    'ENGINE': 'django.db.backends.mysql',
-    'NAME': 'app',
-    'USER': 'appserver',
-    'PASSWORD': 'foobarzoot',
-    'HOST': '172.17.0.2',
-    'PORT': '3306',
-  },
+#   'auth_db': {
+#     'ENGINE': 'django.db.backends.mysql',
+#     'NAME': 'app',
+#     'USER': 'appserver',
+#     'PASSWORD': 'foobarzoot',
+#     'HOST': '172.17.0.2',
+#     'PORT': '3306',
+#   },
   'db1': {
     'ENGINE': 'django.db.backends.mysql',
-    'NAME': 'app',
+    'NAME': 'db1',
     'USER': 'appserver',
-    'PASSWORD': 'foobarzoot',
-    'HOST': '172.17.0.3',
+    'PASSWORD': '1234',
+    'HOST': 'localhost',
     'PORT': '3306',
   },
   'db2': {
     'ENGINE': 'django.db.backends.mysql',
-    'NAME': 'app',
+    'NAME': 'db2',
     'USER': 'appserver',
-    'PASSWORD': 'foobarzoot',
-    'HOST': '172.17.0.4',
+    'PASSWORD': '1234',
+    'HOST': 'localhost',
     'PORT': '3306',
   },
 }
@@ -151,8 +151,3 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
-
-
-NUM_LOGICAL_SHARDS = 10
-
-ALLOWED_HOSTS = ['35.223.59.213', 'localhost', '127.0.0.1']
