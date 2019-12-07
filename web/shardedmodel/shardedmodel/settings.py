@@ -72,6 +72,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'shardedmodel.wsgi.application'
 
+NUM_LOGICAL_SHARDS = 1024
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
@@ -81,8 +82,8 @@ DATABASES = {
         'NAME': 'default_db',
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        'USER': 'root',
-        'PASSWORD': 'root',
+        'USER': 'appserver',
+        'PASSWORD': '1234',
         'HOST': 'localhost',
         'PORT': '3306',
   },
