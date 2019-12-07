@@ -31,11 +31,11 @@ class ShardRouter(object):
 
         db = None    
         try:
-            instance = hints['instance']
+            instance = hints.get('instance', None)
             db = self._database_of(instance.shard_by)
         except KeyError:
             try:
-                db = self._database_of(hints['shard_by'])
+                db = self._database_of(hints.get('shard_by'))
             except KeyError:
                 print("No instance in hints and no shard_by")
                 db = 'default'
