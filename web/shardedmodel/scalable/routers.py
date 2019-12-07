@@ -16,10 +16,12 @@ class ShardRouter(object):
         return logical_to_physical(logical_shard_of(shard_key))
 
     def _db_for_write(self, model, **hints):
+        print("Writing to DB: ")
         return self._db_for_read(model, **hints)
 
     def _db_for_read(self, model, **hints):
         if model._meta.app_label != 'scalable':
+            print('default')
             return 'default'
         try:
             shard_keys = hints['instance'].shard_by
@@ -27,5 +29,7 @@ class ShardRouter(object):
             try:
                 shard_keys = hints['shard_by']
             except:
+                print('default')
                 return 'default'
+        print(_database_of(shard_keys[0]['name'])) 
         return _database_of(shard_keys[0]['name'])
