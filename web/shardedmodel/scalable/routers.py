@@ -19,6 +19,8 @@ class ShardRouter(object):
         return self._db_for_read(model, **hints)
 
     def _db_for_read(self, model, **hints):
+        if model._meta.app_label != 'scalable':
+            return 'default'
         try:
             shard_keys = hints['instance'].shard_by
         except:
