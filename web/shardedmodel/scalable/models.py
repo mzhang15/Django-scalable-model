@@ -55,3 +55,10 @@ class Child(ShardModel):
         app_label = 'app'
     name = models.CharField(max_length = 10, primary_key = True)
     shard_key = models.ForeignKey('Root', null=True,on_delete=models.CASCADE)
+
+class User(ShardModel):
+    is_root = models.BooleanField(default = True)
+    name = models.CharField(max_length = 255,primary_key=True)
+
+class Post(ShardModel):
+    shard_key = models.ForeignKey('Root', null=True,on_delete=models.CASCADE)

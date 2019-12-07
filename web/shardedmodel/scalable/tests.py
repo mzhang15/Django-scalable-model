@@ -1,7 +1,7 @@
 
 # Create your tests here.
 from django.test import TestCase
-from scalable.models import Root, Child, Mapping, ShardModel
+from scalable.models import Root, Child, Mapping, User, Post
 from scalable.utils import MappingDict
 from django.db import models
 # Create your tests here.
@@ -29,17 +29,6 @@ class shardTestCase(TestCase):
         print('Write db for shard 8 (does not exist): ', mapping_dict.get_write_db(8))
 
     def test_db_router(self):
-        class User(ShardModel):
-            class Meta:
-                app_label = 'app'
-            is_root = models.BooleanField(default = True)
-            name = models.CharField(max_length = 255,primary_key=True)
-
-        class Post(ShardModel):
-            class Meta:
-                app_label = 'app'
-            shard_key = models.ForeignKey('Root', null=True,on_delete=models.CASCADE)
-
         User.objects.create(name = 'user1')
         User.objects.create(name = 'user2')
         user1 = User.objects.get(name= 'user1')
