@@ -10,6 +10,9 @@ class Mapping(models.Model):
     def __str__(self):
         return ("[%d, %d] %d %s %s" % (self.min_shard, self.max_shard, self.perm, self.target1, self.target2))
 
+    def migrate(self, mapping, target):
+        pass
+
 class ShardManager(models.Manager):
     def get_queryset(self):
         q = super().get_queryset()
