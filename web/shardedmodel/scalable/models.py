@@ -13,9 +13,10 @@ class Mapping(models.Model):
 class ShardManager(models.Manager):
     def get_queryset(self):
         q = super().get_queryset()
+        print(q)
         queries = q.values()
         q._hints['shard_by'] = []
-        #print(q.values())
+        print(q.values(), "flag")
         #if current model is the root models
         if hasattr(q.model,'is_root'):
             for query in queries:

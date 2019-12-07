@@ -83,7 +83,7 @@ DATABASES = {
         },
     },
 }
-DATABASE_ROUTERS = ['scalable.router.ShardRouter']
+DATABASE_ROUTERS = ['app.router.ShardRouter']
 
 
 # Password validation
