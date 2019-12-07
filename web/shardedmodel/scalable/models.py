@@ -10,13 +10,16 @@ class Mapping(models.Model):
     def __str__(self):
         return ("[%d, %d] %d %s %s" % (self.min_shard, self.max_shard, self.perm, self.target1, self.target2))
 
+    def migrate(self, mapping, target):
+        pass
+
 class ShardManager(models.Manager):
     def get_queryset(self):
         q = super().get_queryset()
         print(q)
         queries = q.values()
         q._hints['shard_by'] = []
-        print(q.values(), "flag")
+        print(q.values())
         #if current model is the root models
         if hasattr(q.model,'is_root'):
             for query in queries:
@@ -37,18 +40,22 @@ class ShardModel(models.Model):
             self.shard_by = [super().serializable_value('shard_key')]
             super().save(*args, **kwargs)
         elif (hasattr(self,'is_root') and self.is_root):
+            print(self._meta.pk)
             self.shard_by = [super().serializable_value(self._meta.pk.name)]
             super().save(*args, **kwargs)
         return
 
 class Root(ShardModel):
-    class Meta:
-        app_label = 'app'
     is_root = models.BooleanField(default = True)
     name = models.CharField(max_length = 255,primary_key=True)
 
 class Child(ShardModel):
-    class Meta:
-        app_label = 'app'
     name = models.CharField(max_length = 10, primary_key = True)
     shard_key = models.ForeignKey('Root', null=True,on_delete=models.CASCADE)
+
+class User(ShardModel):
+    is_root = models.BooleanField(default = True)
+    name = models.CharField(max_length = 255,primary_key=True)
+
+class Post(ShardModel):
+    shard_key = models.ForeignKey('Root', null=True, on_delete=models.CASCADE)
