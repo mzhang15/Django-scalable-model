@@ -37,28 +37,29 @@ class ShardModel(models.Model):
         # set the root model
         if (hasattr(self,'shard_key') and isinstance(self._meta.get_field('shard_key'), models.ForeignKey)):
             self.shard_by = [super().serializable_value('shard_key')]
-            super().save(*args, **kwargs)
+            # super().save(self, *args, **kwargs)
+            super(ShardModel, self).save(*args, **kwargs)
         elif (hasattr(self,'is_root') and self.is_root):
             print(self._meta.pk)
             self.shard_by = [super().serializable_value(self._meta.pk.name)]
-            super().save(*args, **kwargs)
+            super(ShardModel, self).save(*args, **kwargs)
         return
 
-class Root(ShardModel):
-    class Meta:
-        app_label = 'app'
-    is_root = models.BooleanField(default = True)
-    name = models.CharField(max_length = 255,primary_key=True)
+# class Root(ShardModel):
+#     class Meta:
+#         app_label = 'app'
+#     is_root = models.BooleanField(default = True)
+#     name = models.CharField(max_length = 255,primary_key=True)
 
-class Child(ShardModel):
-    class Meta:
-        app_label = 'app'
-    name = models.CharField(max_length = 10, primary_key = True)
-    shard_key = models.ForeignKey('Root', null=True,on_delete=models.CASCADE)
+# class Child(ShardModel):
+#     class Meta:
+#         app_label = 'app'
+#     name = models.CharField(max_length = 10, primary_key = True)
+#     shard_key = models.ForeignKey('Root', null=True,on_delete=models.CASCADE)
 
-class User(ShardModel):
-    is_root = models.BooleanField(default = True)
-    name = models.CharField(max_length = 255,primary_key=True)
+# class User(ShardModel):
+#     is_root = models.BooleanField(default = True)
+#     name = models.CharField(max_length = 255,primary_key=True)
 
-class Post(ShardModel):
-    shard_key = models.ForeignKey('Root', null=True,on_delete=models.CASCADE)
+# class Post(ShardModel):
+#     shard_key = models.ForeignKey('Root', null=True,on_delete=models.CASCADE)

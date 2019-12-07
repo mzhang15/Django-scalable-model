@@ -15,21 +15,25 @@ class ShardRouter(object):
     def _database_of(self, shard_key):
         return logical_to_physical(logical_shard_of(shard_key))
 
-    def _db_for_write(self, model, **hints):
+    def db_for_write(self, model, **hints):
         print("Writing to DB: ")
-        return self._db_for_read(model, **hints)
+        return self.db_for_read(model, **hints)
 
-    def _db_for_read(self, model, **hints):
+    def db_for_read(self, model, **hints):
         if model._meta.app_label != 'demo':
             print('default')
             return 'default'
         try:
             shard_keys = hints['instance'].shard_by
+            print(shard_keys)
         except:
             try:
                 shard_keys = hints['shard_by']
             except:
                 print('default')
                 return 'default'
-        print(_database_of(shard_keys[0]['name'])) 
-        return _database_of(shard_keys[0]['name'])
+        print(self._database_of(shard_keys[0]))
+        return self._database_of(shard_keys[0])
+
+    def allow_migrate(self, db, app_label, model=None, **hints):
+        return True
