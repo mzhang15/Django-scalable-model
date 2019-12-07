@@ -39,6 +39,7 @@ class ShardModel(models.Model):
             self.shard_by = [super().serializable_value('shard_key')]
             super().save(*args, **kwargs)
         elif (hasattr(self,'is_root') and self.is_root):
+            print(self._meta.pk)
             self.shard_by = [super().serializable_value(self._meta.pk.name)]
             super().save(*args, **kwargs)
         return
