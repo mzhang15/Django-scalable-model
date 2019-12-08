@@ -53,7 +53,10 @@ class ShardManager(models.Manager):
 
 class ShardModel(models.Model):
     objects = ShardManager()
-    init_mapping()
+    try:
+        init_mapping()
+    except:
+        print('In makemigrations step, cannot init_mapping yet')
 
     class Meta:
         abstract = True
