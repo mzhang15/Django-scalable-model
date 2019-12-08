@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['35.223.59.213', 'localhost', '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    'rest_framework',
     'scalable.apps.ScalableConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -80,12 +81,17 @@ DATABASES = {
   'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'default_db',
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         'USER': 'appserver',
         'PASSWORD': '1234',
         'HOST': 'localhost',
         'PORT': '3306',
+        # following is the setting for not using mysql
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        # 'USER': '',
+        # 'PASSWORD': '', 
+        # 'HOST': '',
+        # 'PORT': '',
   },
 #   'auth_db': {
 #     'ENGINE': 'django.db.backends.mysql',
@@ -147,6 +153,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+APPEND_SLASH = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/

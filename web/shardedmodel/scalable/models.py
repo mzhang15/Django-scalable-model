@@ -65,11 +65,3 @@ class ShardModel(models.Model):
             super().save(*args, **kwargs)
             print(self.shard_by)
         return
-
-class Root(ShardModel):
-    is_root = models.BooleanField(default = True)
-    name = models.CharField(max_length = 255,primary_key=True)
-
-class Child(ShardModel):
-    name = models.CharField(max_length = 10, primary_key = True)
-    shard_key = models.ForeignKey('Root', null=True,on_delete=models.CASCADE)
