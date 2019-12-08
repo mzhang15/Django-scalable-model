@@ -33,6 +33,7 @@ def init_mapping():
             # print("db name", db[1]['NAME'])
             print(shard, shard + step - 1, db[1]['NAME'])
             mapping = Mapping(min_shard=shard, max_shard=shard + step - 1, perm=read_perm, target1=db[1]['NAME'])
+            mapping.save()
             mapping = Mapping(min_shard=shard, max_shard=shard + step - 1, perm=write_perm, target1=db[1]['NAME'])
             mapping.save()
 
