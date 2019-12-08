@@ -4,7 +4,6 @@
 # from rest_framework.parsers import JSONParser
 
 from rest_framework import viewsets
-
 from .models import Mapping
 from .serializers import MappingSerializer
 

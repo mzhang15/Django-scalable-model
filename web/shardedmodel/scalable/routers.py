@@ -52,6 +52,7 @@ class ShardRouter(object):
         return db
 
     def allow_relation(self, obj1, obj2, **hints):
+        #allow_relations function is needed for app to run in gcp enviroment
         return True
 
     def allow_migrate(self, db, app_label, model=None, **hints):

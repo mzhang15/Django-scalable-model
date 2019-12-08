@@ -54,6 +54,7 @@ class ShardManager(models.Manager):
 class ShardModel(models.Model):
     objects = ShardManager()
     try:
+        # this try block prevents the app from crashing during makemigraions
         init_mapping()
     except:
         print('In makemigrations step, cannot init_mapping yet')

@@ -227,7 +227,7 @@
       },
       methods: {
         getMappings: function() {
-          let api_url = '/mappings/';
+          let api_url = '/mappings/'; // the '/' at the end of routes is needed for app on gcp to get api correctly
           this.loading = true;
           this.$http.get(api_url)
               .then((response) => {
