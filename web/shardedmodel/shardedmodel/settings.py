@@ -159,3 +159,7 @@ APPEND_SLASH = False
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+CUSTOMIZED_MODEL_MODULE = 'demo.models'
+
+SHARDABLE_MODELS = 'User'

@@ -14,6 +14,28 @@ class Mapping(models.Model):
     def migrate(self, mapping, target):
         pass
 
+def init_mapping():
+    print("init mapping")
+    if len(Mapping.objects.all()) == 0:
+        num_of_db = len(settings.DATABASES) - 1
+        db_list = list(settings.DATABASES.items())
+        step = int(settings.NUM_LOGICAL_SHARDS / num_of_db)
+        read_perm = 1
+        write_perm = 2
+        print("num of db", num_of_db)
+        print("step", step)
+
+        db_list_index = 1
+        for shard in range(0, 1024, step):
+            db = db_list[db_list_index]
+            db_list_index += 1
+            # print("db", db)
+            # print("db name", db[1]['NAME'])
+            print(shard, shard + step - 1, db[1]['NAME'])
+            mapping = Mapping(min_shard=shard, max_shard=shard + step - 1, perm=read_perm, target1=db[1]['NAME'])
+            mapping = Mapping(min_shard=shard, max_shard=shard + step - 1, perm=write_perm, target1=db[1]['NAME'])
+            mapping.save()
+
 class ShardManager(models.Manager):
     def get_queryset(self):
         q = super().get_queryset()
@@ -27,25 +49,6 @@ class ShardManager(models.Manager):
             for query in queries:
                 q._hints['shard_by'].append(query.get('shard_key')) if query.get('shard_key') != None else None
         return q
-
-def init_mapping():
-    print("init mapping")
-    if Mapping.objects.all() is None:
-        num_of_db = len(settings.DATABASES) - 1
-        db_list = list(settings.DATABASES.items())
-        step = int(settings.NUM_LOGICAL_SHARDS / num_of_db)
-        print("num of db", num_of_db)
-        print("step", step)
-
-        db_list_index = 1
-        for shard in range(0, 1024, step):
-            db = db_list[db_list_index]
-            db_list_index += 1
-            # print("db", db)
-            # print("db name", db[1]['NAME'])
-            print(shard, shard + step - 1, db[1]['NAME'])
-            mapping = Mapping(min_shard=shard, max_shard=shard + step - 1, perm=1, target1=db[1]['NAME'])
-            mapping.save()
 
 class ShardModel(models.Model):
     objects = ShardManager()

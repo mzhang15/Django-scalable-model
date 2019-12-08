@@ -227,7 +227,7 @@
       },
       methods: {
         getMappings: function() {
-          let api_url = '/mappings';
+          let api_url = '/mappings/';
           this.loading = true;
           this.$http.get(api_url)
               .then((response) => {

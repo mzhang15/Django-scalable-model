@@ -15,7 +15,6 @@ def logical_to_physical(logical):
     return target
 
 class ShardRouter(object):
-    
     def _database_of(self, shard_key):
         if shard_key is None or len(shard_key) == 0:
             return 'default'
@@ -52,6 +51,8 @@ class ShardRouter(object):
             db = 'default'
         return db
 
+    def allow_relation(self, obj1, obj2, **hints):
+        return True
 
     def allow_migrate(self, db, app_label, model=None, **hints):
         return True
