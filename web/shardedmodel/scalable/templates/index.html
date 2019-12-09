@@ -156,7 +156,7 @@
                 <td>${mapping.target1}</td>
                 <td>${mapping.target2}</td>
                 <td>
-                  <button class="btn btn-info" v-on:click.prevent="getMapping(mapping)" data-toggle="modal" data-target="#migrateModal">Migrate</button>
+                  <button class="btn btn-info" v-if="mapping.perm == 2" v-on:click.prevent="getMapping(mapping)" data-toggle="modal" data-target="#migrateModal">Migrate</button>
                 </td>
               </tr>
             </tbody>
@@ -257,8 +257,9 @@
               })
         },
         updateMapping: function(param) {
+            console.log("update: ", param);
             this.loading = true;
-            this.$http.put('/mappings/${param.id}/', param.id)
+            this.$http.put(`/mappings/${param.id}/`, param)
                 .then((response) => {
                     this.loading = false;
                     this.currentMapping = response.data;
@@ -271,7 +272,7 @@
         },
         deleteMapping: function(id) {
           this.loading = true;
-          this.$http.delete('/mappings/${id}/')
+          this.$http.delete(`/mappings/${id}/`)
               .then((response) => {
                 this.loading = false;
                 this.getMappings();
@@ -287,10 +288,10 @@
             let param2 = this.currentMapping;
             let param3 = this.currentMapping;
 
-            // 1. add mapping for write permission
-            param1.perm = 2;
+            // 1. update original mapping with the write permission
+            // param1.perm = 2;
             param1.target2 = this.newTarget.migrate_target;
-            this.addMapping(param2);
+            this.updateMapping(param2);
 
             // 2. update original mapping for read (delete and add)
             // this.deleteMapping(param2.id);
