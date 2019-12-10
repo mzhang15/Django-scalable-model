@@ -109,3 +109,5 @@ def migration(shard_mapping_id):
 
     #     for data in dataset:
     #         data.save()
+
+    # compare its new mapping db with current db, if different, delete

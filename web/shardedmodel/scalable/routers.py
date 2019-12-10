@@ -28,10 +28,12 @@ class ShardRouter(object):
         return logical_to_physical(logical_shard_of(shard_key[0]), op_type)
 
     def db_for_write(self, model, **hints):
+        print("db_for_write...")
         hints['op_type'] = WRITE_OP
         return self._db_for_read_write(model, **hints)
 
     def db_for_read(self, model, **hints):
+        print("db_for_read...")
         hints['op_type'] = READ_OP
         return self._db_for_read_write(model, **hints)
 
@@ -51,12 +53,14 @@ class ShardRouter(object):
             db = self._database_of(instance.shard_by, hints['op_type'])
         except KeyError:
             try:
+                print("shard by: %s" % hints['shard_by'])
                 db = self._database_of(hints['shard_by'], hints['op_type'])
             except KeyError:
                 db = 'default'
         #if save() is called by django's own model, can't go through shard manager, thus instance won't have a shard_by field
         except AttributeError:
             db = 'default'
+        print("db_for_read return %s" % db)
         return db
 
     def allow_relation(self, obj1, obj2, **hints):

@@ -1,5 +1,5 @@
 from django.db import models
-from scalable.models import ShardModel
+from scalable.manager import ShardModel
 from django.db import models
 # Create your models here.
 
@@ -8,3 +8,7 @@ class User(ShardModel):
     #     app_label = 'scalable'
     is_root = models.BooleanField(default = True)
     name = models.CharField(max_length = 255,primary_key=True)
+
+    @classmethod
+    def create(cls, name):
+        return cls(name=name)
