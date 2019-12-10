@@ -1,5 +1,5 @@
 from django.db import models
-from scalable.manager import ShardModel
+from scalable.sharded_model import ShardModel
 from django.db import models
 # Create your models here.
 

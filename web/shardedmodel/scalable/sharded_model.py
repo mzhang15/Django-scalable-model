@@ -16,25 +16,6 @@ class ShardManager(models.Manager):
                 u = queryset.model.create(pk)
                 print(u)
                 return u
-        
-
-    # def get_queryset(self):
-    #     print("get_queryset...")
-    #     q = super().get_queryset()
-    #     print("super queryest: ", q)
-    #     queries = q.values()
-    #     q._hints['shard_by'] = []
-    #     #if current model is the root models
-    #     if hasattr(q.model,'is_root'):
-    #         print("iterate query...")
-    #         print("queryset: ", queries)
-    #         for query in queries:
-    #             print(query.get(q.model._meta.pk.name))
-    #             q._hints['shard_by'].append(query.get(q.model._meta.pk.name)) if query.get(q.model._meta.pk.name) != None else None
-    #     elif hasattr(q.model, 'shard_key') :
-    #         for query in queries:
-    #             q._hints['shard_by'].append(query.get('shard_key')) if query.get('shard_key') != None else None
-    #     return q
 
 class ShardModel(models.Model):
     objects = ShardManager()
