@@ -85,7 +85,7 @@ def migration(shard_mapping_id):
     mapping_dict = MappingDict(Mapping.objects.all())
     m_r = mapping_dict.get_mapping(m_w.min_shard)
 
-    mid = int(m_w.max_shard / 2)
+    mid = m_w.min_shard + int((m_w.max_shard - m_w.min_shard) / 2)
     max_shard = m_w.max_shard
     new_db = m_w.target2
 
