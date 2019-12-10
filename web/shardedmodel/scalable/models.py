@@ -5,6 +5,8 @@ READ_ONLY = 1
 WRITE_ONLY = 2
 
 class Mapping(models.Model):
+    class Meta:
+        app_label = 'scalable'
     min_shard = models.IntegerField()
     max_shard = models.IntegerField()
     perm = models.IntegerField()
@@ -20,7 +22,6 @@ class Mapping(models.Model):
 def init_mapping():
     print("init mapping")
     if len(Mapping.objects.all()) == 0:
-
         # TODO: could check if the name of db starts with db
         num_of_db = len(settings.DATABASES) - 1
         if num_of_db == 0:
