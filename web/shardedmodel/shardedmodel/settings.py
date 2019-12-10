@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'app',
     'demo.apps.DemoConfig',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
@@ -86,6 +87,7 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': '3306',
   },
+<<<<<<< HEAD
   'db1': {
     'ENGINE': 'django.db.backends.mysql',
     'NAME': 'demo_db',
