@@ -5,9 +5,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 import importlib
+import time
 
 from .models import Mapping
 from .serializers import MappingSerializer
+from .utils import MappingDict
 
 class MappingList(APIView):
     """
@@ -56,12 +58,54 @@ class MappingDetail(APIView):
         mapping.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+# TODO: this function should be passed with a callback function
 def migration(shard_mapping_id):
-    print("start migrating: ", )
-    split_db = Mapping.objects.get(id = shard_mapping_id)
+    split_db = (Mapping.objects.get(id=shard_mapping_id)).target1
+    print("start migrating from: %s to %s" % (split_db, (Mapping.objects.get(id=shard_mapping_id)).target2))
     customized_models = importlib.import_module(settings.CUSTOMIZED_MODEL_MODULE)
     shardable_models = settings.SHARDABLE_MODELS.split(',')
+
     for model in shardable_models:
         model_to_migrate = getattr(customized_models, model)
         print(model_to_migrate)
-        model_to_migrate.objects.using(split_db).all() 
+
+        # 1.get related data from original db
+        dataset = model_to_migrate.objects.using(split_db).all() 
+
+        # 2. copy data over to dest db
+        print("iterate data in db %s" % split_db)
+        for data in dataset:
+            print(data)
+            data.save()
+
+    time.sleep(20) # for demo use
+
+    # 3. update mapping: delete original
+    m_w = Mapping.objects.get(id=shard_mapping_id)
+    mapping_dict = MappingDict(Mapping.objects.all())
+    m_r = mapping_dict.get_mapping(m_w.min_shard)
+
+    mid = int(m_w.max_shard / 2)
+    max_shard = m_w.max_shard
+    new_db = m_w.target2
+
+    m_r.max_shard = mid
+    m_r.save()
+    m = Mapping(min_shard=mid+1, max_shard=max_shard, perm=m_r.perm, target1=new_db)
+    m.save()
+
+    m_w.max_shard = mid
+    m_w.target2 = ''
+    m_w.save()
+    m = Mapping(min_shard=mid+1, max_shard=max_shard, perm=2, target1=new_db)
+    m.save()
+
+    # 4. delete 2nd half data from target1; delete 1st half data from target2
+    # for model in shardable_models:
+    #     model_to_migrate = getattr(customized_models, model)
+    #     print(model_to_migrate)
+
+    #     dataset = model_to_migrate.objects.using(split_db).all() 
+
+    #     for data in dataset:
+    #         data.save()

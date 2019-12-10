@@ -19,7 +19,10 @@ class MappingDict:
     def get_write_db(self, logical):
         for m in self.write_mappings:
             if (logical >= m.min_shard and logical <= m.max_shard):
-                return m.target1
+                # this logic is based on the assumption that we don't support dual write during migration
+                if not m.target2:
+                    return m.target1
+                return m.target2
         return None
 
 
