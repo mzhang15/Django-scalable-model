@@ -32,14 +32,13 @@ ALLOWED_HOSTS = ['35.223.59.213', 'localhost', '127.0.0.1']
 
 INSTALLED_APPS = [
     'rest_framework',
-    'scalable.apps.ScalableConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'demo.apps.DemoConfig',
+    'demo.apps.DemoConfig'
 ]
 
 MIDDLEWARE = [
@@ -80,36 +79,12 @@ NUM_LOGICAL_SHARDS = 1024
 DATABASES = {
   'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'default_db',
-        'USER': 'appserver',
-        'PASSWORD': '1234',
+        'NAME': 'demo_db',
+        'USER': 'root',
+        'PASSWORD': '123123123',
         'HOST': 'localhost',
         'PORT': '3306',
   },
-  'db1': {
-    'ENGINE': 'django.db.backends.mysql',
-    'NAME': 'demo_db',
-    'USER': 'TESTUSER',
-    'PASSWORD': '[Abc123123]',
-    'HOST': '10.128.0.12',
-    'PORT': '3306',
-  },
-  'db2': {
-    'ENGINE': 'django.db.backends.mysql',
-    'NAME': 'demo_db',
-    'USER': 'TESTUSER',
-    'PASSWORD': '[Abc123123]',
-    'HOST': '10.128.0.15',
-    'PORT': '3306',
-  },
-  'db3': {
-    'ENGINE': 'django.db.backends.mysql',
-    'NAME': 'demo_db',
-    'USER': 'TESTUSER',
-    'PASSWORD': '[Abc123123]',
-    'HOST': '10.128.0.16',
-    'PORT': '3306',
-  }
 }
 
 DATABASE_ROUTERS = ['scalable.routers.ShardRouter']
