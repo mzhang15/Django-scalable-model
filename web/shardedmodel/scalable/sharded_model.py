@@ -10,7 +10,7 @@ class ShardManager(models.Manager):
     # TODO: pass in a dict **kwargs and check if name is given
     def get(self, pk):
         db = logical_to_physical(logical_shard_of(pk), 1)
-        print(db)
+        print("get", db)
         queryset = super()._queryset_class(model=self.model, using=db, hints=self._hints)
         # specify which table to look (User.objects.using('db').get())
         queries = queryset.values()
