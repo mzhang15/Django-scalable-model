@@ -19,7 +19,7 @@ class ShardManager(models.Manager):
             print('Get query must include the shard_key')
         queryset = super()._queryset_class(model=self.model, using=db, hints=self._hints)
         queries = queryset.values()
-
+        
         for query in queries:
             if query.get(queryset.model._meta.pk.name) == shard_key:
                 u = queryset.model.create(query)

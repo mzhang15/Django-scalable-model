@@ -20,7 +20,6 @@ def logical_to_physical(logical, op_type):
         target = mapping_dict.get_write_db(logical)
     print("target db", target)
     return target
-
 class ShardRouter(object):
     def _database_of(self, shard_key, op_type):
         if shard_key is None or len(shard_key) == 0:
@@ -41,7 +40,7 @@ class ShardRouter(object):
         if model._meta.app_label == 'auth':
             print("db_for_read: ", model._meta.app_label)
             return 'default'
-        
+
         if model._meta.app_label == 'sessions':
             return 'default'
 
