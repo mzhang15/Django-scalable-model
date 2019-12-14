@@ -63,15 +63,16 @@ def post_list(request, fk):
     """
     if request.method == 'GET':
         # TODO: need Shelly to debug post get method
-        # posts = Post.objects.get(shard_key=fk)
-        # print(posts)
+        user = User(name=fk)
+        posts = Post.objects.get(shard_key=user)
+        print(posts)
 
         # right now is fake data
-        user = User(name='user1')
-        post1 = Post(shard_key=user, content='fake post 1')
-        post2 = Post(shard_key=user, content='fake post 2')
-        posts = [post1, post2]
-        serializer = PostSerializer(posts, many=True)
+        # user = User(name='user1')
+        # post1 = Post(shard_key=user, content='fake post 1')
+        # post2 = Post(shard_key=user, content='fake post 2')
+        # posts = [post1, post2]
+        # serializer = PostSerializer(posts, many=True)
         return JsonResponse(serializer.data, safe=False)
 
     elif request.method == 'POST':
