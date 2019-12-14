@@ -7,18 +7,23 @@ READ_ONLY = 1
 WRITE_ONLY = 2
 
 class ShardManager(models.Manager):
-    # TODO: pass in a dict **kwargs and check if name is given
-    def get(self, pk):
-        db = logical_to_physical(logical_shard_of(pk), 1)
+    def get(self, **kwargs):
+        shard_key = None
+        try:
+            if(self.model.is_root):
+                shard_key = kwargs[self.model._meta.pk.name]
+            else:
+                shard_key = kwargs['shardkey']
+            db = logical_to_physical(logical_shard_of(shard_key), 1)
+        except KeyError:
+            print('Get query must include the shard_key')
         print("get", db)
         queryset = super()._queryset_class(model=self.model, using=db, hints=self._hints)
-        # specify which table to look (User.objects.using('db').get())
         queries = queryset.values()
 
         for query in queries:
-            if query.get(queryset.model._meta.pk.name) == pk:
-                print ("result: ", query)
-                u = queryset.model.create(pk)
+            if query.get(queryset.model._meta.pk.name) == shard_key:
+                u = queryset.model.create(query)
                 print(u)
                 return u
 
@@ -38,22 +43,6 @@ def init_mapping():
         mapping = Mapping(min_shard=0, max_shard=settings.NUM_LOGICAL_SHARDS, perm=WRITE_ONLY, target1=db_list[1][1]['NAME'])
         mapping.save()
 
-        # step = int(settings.NUM_LOGICAL_SHARDS / num_of_db)
-        # print("num of db", num_of_db)
-        # print("step", step)
-
-        # db_list_index = 1
-        # for shard in range(0, 1024, step):
-        #     db = db_list[db_list_index]
-        #     db_list_index += 1
-        #     # print("db", db)
-        #     # print("db name", db[1]['NAME'])
-        #     print(shard, shard + step - 1, db[1]['NAME'])
-        #     mapping = Mapping(min_shard=shard, max_shard=shard + step - 1, perm=READ_ONLY, target1=db[1]['NAME'])
-        #     mapping.save()
-        #     mapping = Mapping(min_shard=shard, max_shard=shard + step - 1, perm=WRITE_ONLY, target1=db[1]['NAME'])
-        #     mapping.save()
-
 
 class ShardModel(models.Model):
     objects = ShardManager()
@@ -65,6 +54,7 @@ class ShardModel(models.Model):
 
     class Meta:
         abstract = True
+        
     def save(self, *args, **kwargs):
         # set the root model
         if (hasattr(self,'shard_key') and isinstance(self._meta.get_field('shard_key'), models.ForeignKey)):

@@ -10,5 +10,5 @@ class User(ShardModel):
     name = models.CharField(max_length = 255,primary_key=True)
 
     @classmethod
-    def create(cls, name):
-        return cls(name=name)
+    def create(cls, kwargs):
+        return cls(**kwargs)
