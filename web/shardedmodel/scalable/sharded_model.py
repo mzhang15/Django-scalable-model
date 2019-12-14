@@ -17,14 +17,13 @@ class ShardManager(models.Manager):
             db = logical_to_physical(logical_shard_of(shard_key), 1)
         except KeyError:
             print('Get query must include the shard_key')
-        print("get", db)
         queryset = super()._queryset_class(model=self.model, using=db, hints=self._hints)
         queries = queryset.values()
-
+        # TODO: u needs to be returned as an array
+        # TODO: when the model is a root model, return a single object
         for query in queries:
             if query.get(queryset.model._meta.pk.name) == shard_key:
                 u = queryset.model.create(query)
-                print(u)
                 return u
 
 def init_mapping():
@@ -54,15 +53,18 @@ class ShardModel(models.Model):
 
     class Meta:
         abstract = True
-        
+
     def save(self, *args, **kwargs):
         # set the root model
         print("save...")
         if (hasattr(self,'shard_key') and isinstance(self._meta.get_field('shard_key'), models.ForeignKey)):
-            print('save')
+            print('is child class')
             self.shard_by = [super().serializable_value('shard_key')]
+            print('shard_by:', self.shard_by)
+            print('trying to save')
             super().save(*args, **kwargs)
-            print(self.shard_by)
+            print('saved')
+            # print(self.shard_by)
         elif (hasattr(self,'is_root') and self.is_root):
             self.shard_by = [super().serializable_value(self._meta.pk.name)]
             super().save(*args, **kwargs)

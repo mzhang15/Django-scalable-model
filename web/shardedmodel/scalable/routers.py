@@ -28,12 +28,13 @@ class ShardRouter(object):
         return logical_to_physical(logical_shard_of(shard_key[0]), op_type)
 
     def db_for_write(self, model, **hints):
-        print("db_for_write...")
+        print("routers.py -> db_for_write...") ##
         hints['op_type'] = WRITE_OP
         return self._db_for_read_write(model, **hints)
 
     def db_for_read(self, model, **hints):
-        print("db_for_read...")
+        print("routers.py -> db_for_read...") ##
+        print(model)
         hints['op_type'] = READ_OP
         return self._db_for_read_write(model, **hints)
 
@@ -47,15 +48,19 @@ class ShardRouter(object):
 
         db = None
         try:
+            print('im here')
             instance = hints['instance']
             print("instance", hints['instance'])
-            print(instance.shard_by)
-            db = self._database_of(instance.shard_by, hints['op_type'])
+            # TODO: instance.pk returns the current model's primary key(eg. for child class Post it is an int)
+            # TODO: if child class then look up its parent's priamry key; if parent class then instance.pk
+            print(instance.pk)
+            db = self._database_of([instance.pk], hints['op_type'])
         except KeyError:
             try:
                 print("shard by: %s" % hints['shard_by'])
                 db = self._database_of(hints['shard_by'], hints['op_type'])
             except KeyError:
+                print("key error, returning default db") ##
                 db = 'default'
         #if save() is called by django's own model, can't go through shard manager, thus instance won't have a shard_by field
         except AttributeError:

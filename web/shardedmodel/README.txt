@@ -27,15 +27,15 @@ control + D // logout database
 mysql -u appserver -p //log into database as appserver
 show databases // you should see all 3 databases we created
 
-python manage.py makemigrations demo scalable
-python manage.py migrate --database=default
-python manage.py migrate --database=db1
-python manage.py migrate --database=db2
+python3 manage.py makemigrations demo scalable
+python3 manage.py migrate --database=default
+python3 manage.py migrate --database=db1
+python3 manage.py migrate --database=db2
 
 // now you can test save() and router by writing testcase or run shell
 python manage.py shell // start shell
 
 // in the shell do following
-from demo.models import user
+from demo.models import User
 u = User(name=<value>)
 u.save()
