@@ -156,4 +156,4 @@ STATIC_URL = '/static/'
 
 CUSTOMIZED_MODEL_MODULE = 'demo.models'
 
-SHARDABLE_MODELS = 'User'
+SHARDABLE_MODELS = 'User,Post'

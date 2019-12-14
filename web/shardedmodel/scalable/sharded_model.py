@@ -17,14 +17,12 @@ class ShardManager(models.Manager):
             db = logical_to_physical(logical_shard_of(shard_key), 1)
         except KeyError:
             print('Get query must include the shard_key')
-        print("get", db)
         queryset = super()._queryset_class(model=self.model, using=db, hints=self._hints)
         queries = queryset.values()
 
         for query in queries:
             if query.get(queryset.model._meta.pk.name) == shard_key:
                 u = queryset.model.create(query)
-                print(u)
                 return u
 
 def init_mapping():
@@ -54,7 +52,7 @@ class ShardModel(models.Model):
 
     class Meta:
         abstract = True
-        
+
     def save(self, *args, **kwargs):
         # set the root model
         if (hasattr(self,'shard_key') and isinstance(self._meta.get_field('shard_key'), models.ForeignKey)):
