@@ -62,8 +62,11 @@ def post_list(request, fk):
     List all posts for a user, or create a new post.
     """
     if request.method == 'GET':
+        # TODO: need Shelly to debug post get method
         # posts = Post.objects.get(shard_key=fk)
-        # serializer = PostSerializer(posts, many=True)
+        # print(posts)
+
+        # right now is fake data
         user = User(name='user1')
         post1 = Post(shard_key=user, content='fake post 1')
         post2 = Post(shard_key=user, content='fake post 2')
@@ -86,31 +89,3 @@ def post_list(request, fk):
             # serializer.save()
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
-
-# @csrf_exempt
-# def post_detail(request, pk):
-#     """
-#     Retrieve, update or delete a code snippet.
-#     """
-#     try:
-#         # user = User.objects.get(pk=pk)
-#         print("post detail: ", pk)
-#         post = Post.objects.get(shard_key=pk)
-#     except Post.DoesNotExist:
-#         return HttpResponse(status=404)
-
-#     if request.method == 'GET':
-#         serializer = PostSerializer(post)
-#         return JsonResponse(serializer.data)
-
-#     elif request.method == 'PUT':
-#         data = JSONParser().parse(request)
-#         serializer = PostSerializer(post, data=data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return JsonResponse(serializer.data)
-#         return JsonResponse(serializer.errors, status=400)
-
-#     elif request.method == 'DELETE':
-#         post.delete()
-#         return HttpResponse(status=204)
