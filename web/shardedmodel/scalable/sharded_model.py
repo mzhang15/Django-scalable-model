@@ -10,21 +10,33 @@ class ShardManager(models.Manager):
     def get(self, **kwargs):
         shard_key = None
         try:
-            if(self.model.is_root):
+            print('is_root',self.model._meta.get_field('is_root').default)
+            if(self.model._meta.get_field('is_root').default):
+                print('is root' , self.model._meta.pk.name)
                 shard_key = kwargs[self.model._meta.pk.name]
+
             else:
-                shard_key = kwargs['shardkey']
+                shard_key = kwargs['shard_key'].pk
             db = logical_to_physical(logical_shard_of(shard_key), 1)
         except KeyError:
             print('Get query must include the shard_key')
+            return
+
         queryset = super()._queryset_class(model=self.model, using=db, hints=self._hints)
         queries = queryset.values()
-        # TODO: u needs to be returned as an array
-        # TODO: when the model is a root model, return a single object
-        for query in queries:
-            if query.get(queryset.model._meta.pk.name) == shard_key:
-                u = queryset.model.create(query)
-                return u
+        u = None
+        if not self.model._meta.get_field('is_root').default:
+            u = []
+            for query in queries:
+                if query.get('shard_key_id') == shard_key:
+                    u.append(queryset.model.create(query))
+                    print(u)
+        else:
+            for query in queries:
+                if query.get(queryset.model._meta.pk.name) == shard_key:
+                    u = queryset.model.create(query)
+                    break
+        return u
 
 def init_mapping():
     print("init mapping")
