@@ -23,4 +23,5 @@ urlpatterns = [
     path('api/', include('demo.urls')),
     path('mapping', TemplateView.as_view(template_name='index.html')),
     path('demo/<slug:db>', TemplateView.as_view(template_name='users.html')),
+    path('demo/posts/<slug:db>', TemplateView.as_view(template_name='posts.html'))
 ]
