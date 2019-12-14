@@ -7,7 +7,7 @@ from demo.models import User
 from demo.serializers import UserSerializer
 
 @csrf_exempt
-def user_list(request, db):
+def user_list(request, db=0):
     """
     List all users under db, or create a new user.
     """
@@ -17,10 +17,13 @@ def user_list(request, db):
         return JsonResponse(serializer.data, safe=False)
 
     elif request.method == 'POST':
+        print("post....")
         data = JSONParser().parse(request)
         serializer = UserSerializer(data=data)
         if serializer.is_valid():
-            serializer.save()
+            user = User(name=data['name'])
+            user.save()
+            # serializer.save()
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
 
@@ -31,6 +34,7 @@ def user_detail(request, pk):
     """
     try:
         # user = User.objects.get(pk=pk)
+        print("user detail: ", pk)
         user = User.objects.get(pk)
     except User.DoesNotExist:
         return HttpResponse(status=404)

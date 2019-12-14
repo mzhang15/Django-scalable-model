@@ -57,6 +57,7 @@ class ShardModel(models.Model):
         
     def save(self, *args, **kwargs):
         # set the root model
+        print("save...")
         if (hasattr(self,'shard_key') and isinstance(self._meta.get_field('shard_key'), models.ForeignKey)):
             print('save')
             self.shard_by = [super().serializable_value('shard_key')]
