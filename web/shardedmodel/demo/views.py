@@ -35,7 +35,7 @@ def user_detail(request, pk):
     try:
         # user = User.objects.get(pk=pk)
         print("user detail: ", pk)
-        user = User.objects.get(pk)
+        user = User.objects.get(name=pk)
     except User.DoesNotExist:
         return HttpResponse(status=404)
 
