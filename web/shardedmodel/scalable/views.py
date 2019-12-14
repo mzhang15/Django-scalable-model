@@ -13,13 +13,15 @@ from .utils import MappingDict
 
 class DeleteAll(APIView):
     def get(self, request, format=None):
+        print(settings.DATABASES.keys())
         # delete mappings
         all_mappings = Mapping.objects.all().delete()
         customized_models = importlib.import_module(settings.CUSTOMIZED_MODEL_MODULE)
         shardable_models = settings.SHARDABLE_MODELS.split(',')
         for model in shardable_models:
-            model_to_del = getattr(customized_models, model)
-            model_to_del.objects.all().delete()
+            for db in settings.DATABASES.keys():
+                model_to_del = getattr(customized_models, model)
+                model_to_del.objects.using(db).all().delete()
         sharded_model.init_mapping()
         return Response(status=status.HTTP_202_ACCEPTED)
 
