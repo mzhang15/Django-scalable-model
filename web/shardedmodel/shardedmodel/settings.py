@@ -81,32 +81,32 @@ DATABASES = {
   'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'default_db',
-        'USER': 'appserver',
-        'PASSWORD': '1234',
+        'USER': 'root',
+        'PASSWORD': 'zyy1997',
         'HOST': 'localhost',
         'PORT': '3306',
   },
   'db1': {
     'ENGINE': 'django.db.backends.mysql',
     'NAME': 'db1',
-    'USER': 'appserver',
-    'PASSWORD': '1234',
+    'USER': 'root',
+    'PASSWORD': 'zyy1997',
     'HOST': 'localhost',
     'PORT': '3306',
   },
   'db2': {
     'ENGINE': 'django.db.backends.mysql',
     'NAME': 'db2',
-    'USER': 'appserver',
-    'PASSWORD': '1234',
+    'USER': 'root',
+    'PASSWORD': 'zyy1997',
     'HOST': 'localhost',
     'PORT': '3306',
   },
   'db3': {
     'ENGINE': 'django.db.backends.mysql',
     'NAME': 'db3',
-    'USER': 'appserver',
-    'PASSWORD': '1234',
+    'USER': 'root',
+    'PASSWORD': 'zyy1997',
     'HOST': 'localhost',
     'PORT': '3306',
   }
@@ -194,4 +194,4 @@ STATIC_URL = '/static/'
 
 CUSTOMIZED_MODEL_MODULE = 'demo.models'
 
-SHARDABLE_MODELS = 'User'
+SHARDABLE_MODELS = 'User,Post'
