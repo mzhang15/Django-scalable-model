@@ -10,20 +10,33 @@ class ShardManager(models.Manager):
     def get(self, **kwargs):
         shard_key = None
         try:
-            if(self.model.is_root):
+            print('is_root',self.model._meta.get_field('is_root').default)
+            if(self.model._meta.get_field('is_root').default):
+                print('is root' , self.model._meta.pk.name)
                 shard_key = kwargs[self.model._meta.pk.name]
+
             else:
-                shard_key = kwargs['shardkey']
+                shard_key = kwargs['shard_key'].pk
             db = logical_to_physical(logical_shard_of(shard_key), 1)
         except KeyError:
             print('Get query must include the shard_key')
+            return
+
         queryset = super()._queryset_class(model=self.model, using=db, hints=self._hints)
         queries = queryset.values()
-        
-        for query in queries:
-            if query.get(queryset.model._meta.pk.name) == shard_key:
-                u = queryset.model.create(query)
-                return u
+        u = None
+        if not self.model._meta.get_field('is_root').default:
+            u = []
+            for query in queries:
+                if query.get('shard_key_id') == shard_key:
+                    u.append(queryset.model.create(query))
+                    print(u)
+        else:
+            for query in queries:
+                if query.get(queryset.model._meta.pk.name) == shard_key:
+                    u = queryset.model.create(query)
+                    break
+        return u
 
 def init_mapping():
     print("init mapping")
@@ -57,10 +70,13 @@ class ShardModel(models.Model):
         # set the root model
         print("save...")
         if (hasattr(self,'shard_key') and isinstance(self._meta.get_field('shard_key'), models.ForeignKey)):
-            print('save')
+            print('is child class')
             self.shard_by = [super().serializable_value('shard_key')]
+            print('shard_by:', self.shard_by)
+            print('trying to save')
             super().save(*args, **kwargs)
-            print(self.shard_by)
+            print('saved')
+            # print(self.shard_by)
         elif (hasattr(self,'is_root') and self.is_root):
             self.shard_by = [super().serializable_value(self._meta.pk.name)]
             super().save(*args, **kwargs)

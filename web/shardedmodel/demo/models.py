@@ -11,7 +11,6 @@ class User(ShardModel):
     def create(cls, kwargs):
         return cls(**kwargs)
 
-
 class Post(ShardModel):
     is_root = models.BooleanField(default = False)
     shard_key = models.ForeignKey('User', on_delete = models.CASCADE)
