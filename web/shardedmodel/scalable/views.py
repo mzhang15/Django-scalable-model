@@ -1,15 +1,27 @@
-
 from django.conf import settings
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from . import sharded_model
 import importlib
 import time
 
 from .models import Mapping
 from .serializers import MappingSerializer
 from .utils import MappingDict
+
+class DeleteAll(APIView):
+    def get(self, request, format=None):
+        # delete mappings
+        all_mappings = Mapping.objects.all().delete()
+        customized_models = importlib.import_module(settings.CUSTOMIZED_MODEL_MODULE)
+        shardable_models = settings.SHARDABLE_MODELS.split(',')
+        for model in shardable_models:
+            model_to_del = getattr(customized_models, model)
+            model_to_del.objects.all().delete()
+        sharded_model.init_mapping()
+        return Response(status=status.HTTP_202_ACCEPTED)
 
 class MappingList(APIView):
     """
@@ -57,6 +69,7 @@ class MappingDetail(APIView):
         mapping = self.get_object(pk)
         mapping.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 # TODO: this function should be passed with a callback function
 def migration(shard_mapping_id):
