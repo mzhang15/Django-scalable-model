@@ -11,11 +11,10 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
+print(BASE_DIR)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
@@ -78,6 +77,7 @@ NUM_LOGICAL_SHARDS = 1024
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
+# Using mysql
   'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'default_db',
@@ -110,9 +110,47 @@ DATABASES = {
     'HOST': 'localhost',
     'PORT': '3306',
   }
+
+# # Using sqlite3
+# 'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'default.db'),
+#         'USER': '',
+#         'PASSWORD': '',
+#         'HOST': '',
+#         'PORT': '',
+#     },
+# str(os.path.join(BASE_DIR, 'db_1.db')): {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db_1.db'),
+#         # 'NAME': 'db_1.db',
+#         'USER': '',
+#         'PASSWORD': '',
+#         'HOST': '',
+#         'PORT': '',
+#     },
+# str(os.path.join(BASE_DIR, 'db_2.db')): {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db_2.db'),
+#         # 'NAME': 'db_2.db',
+#         'USER': '',
+#         'PASSWORD': '',
+#         'HOST': '',
+#         'PORT': '',
+#     },
+# str(os.path.join(BASE_DIR, 'db_3.db')): {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db_3.db'),
+#         # 'NAME': 'db_3.db',
+#         'USER': '',
+#         'PASSWORD': '',
+#         'HOST': '',
+#         'PORT': '',
+#     }
 }
 
 DATABASE_ROUTERS = ['scalable.routers.ShardRouter']
+DATABASE_APPS_MAPPING = {'demo': 'db_1', 'scalable': 'default'}
 
 
 # Password validation
