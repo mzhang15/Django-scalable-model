@@ -8,6 +8,7 @@ WRITE_ONLY = 2
 
 class ShardManager(models.Manager):
     def get(self, **kwargs):
+        print("shard manager...")
         shard_key = None
         try:
             print('is_root',self.model._meta.get_field('is_root').default)

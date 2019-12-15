@@ -134,49 +134,50 @@
       <div class="container">
         <div class="row">
           <h1>List of Posts
-          <button  type="button" class="btn btn-primary" data-toggle="modal" data-target="#addUserModal">ADD USER</button>
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#getUserModal">GET USER</button>
+          <button  type="button" class="btn btn-primary" data-toggle="modal" data-target="#addPostModal">ADD POST</button>
+          <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#getPostModal">GET POST</button> -->
           </h1>
           &emsp;
           <table class="table">
             <thead>
               <tr>
-                <th scope="col">name</th>
+                <th scope="col">shard_key</th>
+                <th scope="col">content</th>
                 <th scope="col">Action</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="user in users">
-                <!-- <th scope="row">${article.article_id}</th> -->
-                <td>${user.name}</td>
+              <tr v-for="post in posts">
+                <td>${post.shard_key}</td>
+                <td>${post.content}</td>
                 <td>
-                  <button class="btn btn-primary" v-on:click="getPosts()">Get Posts</button>
+                  <!-- <button class="btn btn-primary" v-on:click="getPosts()">Get Posts</button> -->
                 </td>
               </tr>
             </tbody>
           </table>
-          <!-- Add User Modal -->
-          <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+          <!-- Add Post Modal -->
+          <div class="modal fade" id="addPostModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLongTitle">ADD USER</h5>
+                  <h5 class="modal-title" id="exampleModalLongTitle">ADD POST</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
-                <form v-on:submit.prevent="addUser()">
+                <form v-on:submit.prevent="addPost()">
                 <div class="modal-body">
                     <div class="form-group">
-                      <label for="user_name">User Name</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="user_name"
-                        placeholder="Enter User Name"
-                        v-model="newUser.name"
-                        required="required" >
-                    </div>
+                        <label for="post_content">Post Content</label>
+                        <textarea
+                          class="form-control"
+                          id="post_content"
+                          placeholder="Enter Post Content"
+                          v-model="newPost.content"
+                          required="required"
+                          rows="1"></textarea>
+                      </div>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary m-progress" data-dismiss="modal">Close</button>
@@ -187,27 +188,27 @@
             </div>
             <div class="loading" v-if="loading===true">Loading&#8230;</div>
           </div>
-          <!-- End of add User modal -->
-          <!-- Get User Modal -->
-          <div class="modal fade" id="getUserModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+          <!-- End of add Post modal -->
+          <!-- Get Post Modal -->
+          <div class="modal fade" id="getPostModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLongTitle">GET USER</h5>
+                  <h5 class="modal-title" id="exampleModalLongTitle">GET POST</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
-                <form v-on:submit.prevent="getUser()">
+                <form v-on:submit.prevent="getPost()">
                 <div class="modal-body">
                     <div class="form-group">
-                      <label for="user_name">User Name</label>
+                      <label for="user_name">Shard Key</label>
                       <input
                         type="text"
                         class="form-control"
                         id="user_name"
                         placeholder="Enter User Name"
-                        v-model="currentUser.name"
+                        v-model="currentPost.shard_key"
                         required="required" >
                     </div>
                 </div>
@@ -242,29 +243,31 @@
       el: '#starting',
       delimiters: ['${','}'],
       data: {
-        db: null,
-        users: [],
+        user: null,
+        posts: [],
         loading: true,
-        currentUser: {'name': null},
+        currentPost: {'shard_key': null, 'content': null},
         message: null,
-        newUser: { 'name': null, },
+        newPost: { 'is_root': false, 'shard_key': null, 'content': null},
       },
       mounted: function() {
-        // this.getUsers();
+        this.getPosts();
       },
       created: function(){
         var currentUrl = window.location.pathname;
         var res = currentUrl.split("/");
-        this.db = res[res.length - 1];
-        console.log(this.db);
+        this.user = res[res.length - 1];
+        console.log(this.user);
       },
       methods: {
-        getUsers: function() {
-          let api_url = '/api/users/' + this.db;
+        getPosts: function() {
+          let api_url = '/api/posts/' + this.user;
+          console.log("getPosts: ", api_url);
           this.loading = true;
           this.$http.get(api_url)
               .then((response) => {
-                this.users = response.data;
+                this.posts = response.data;
+                console.log("posts: ", this.posts);
                 this.loading = false;
               })
               .catch((err) => {
@@ -272,25 +275,12 @@
                 console.log(err);
               })
         },
-        getUser: function() {
+        addPost: function() {
           this.loading = true;
-          console.log(`/api/users/detail/${this.currentUser.name}`);
-          this.$http.get(`/api/users/detail/${this.currentUser.name}`)
-              .then((response) => {
-                this.currentUser = response.data;
-                console.log("get user:", this.currentUser);
-                $("#getUserModal").modal('show');
-                this.loading = false;
-              })
-              .catch((err) => {
-                this.loading = false;
-                console.log(err);
-              })
-        },
-        addUser: function() {
-          this.loading = true;
-          console.log("add user called");
-          this.$http.post('/api/users/',this.newUser)
+          console.log("add Post called");
+          this.newPost.shard_key = this.user;
+          console.log("new post: ", this.newPost);
+          this.$http.post('/api/posts/' + this.user,this.newPost)
               .then((response) => {
                 this.loading = false;
                 this.getUsers();
@@ -300,34 +290,21 @@
                 console.log(err);
               })
         },
-        getPosts() {
-            
-        }
-        // updateArticle: function() {
+        // getPost: function() {
         //   this.loading = true;
-        //   this.$http.put(`/api/article/${this.currentArticle.article_id}/`, this.currentArticle)
+        //   console.log(`/api/posts/detail/${this.currentPost.shard_key}`);
+        //   this.$http.get(`/api/posts/detail/${this.currentPost.shard_key}`)
         //       .then((response) => {
+        //         this.currentUser = response.data;
+        //         console.log("get post:", this.currentPost);
+        //         $("#getPostModal").modal('show');
         //         this.loading = false;
-        //         this.currentArticle = response.data;
-        //         this.getArticles();
         //       })
         //       .catch((err) => {
         //         this.loading = false;
         //         console.log(err);
         //       })
         // },
-        // deleteArticle: function(id) {
-        //   this.loading = true;
-        //   this.$http.delete(`/api/article/${id}/`)
-        //       .then((response) => {
-        //         this.loading = false;
-        //         this.getArticles();
-        //       })
-        //       .catch((err) => {
-        //         this.loading = false;
-        //         console.log(err);
-        //       })
-        //}
       }
     });
   </script>

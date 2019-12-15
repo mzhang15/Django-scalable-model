@@ -3,8 +3,8 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
-from demo.models import User
-from demo.serializers import UserSerializer
+from demo.models import User, Post
+from demo.serializers import UserSerializer, PostSerializer
 
 @csrf_exempt
 def user_list(request, db=0):
@@ -54,3 +54,32 @@ def user_detail(request, pk):
     elif request.method == 'DELETE':
         user.delete()
         return HttpResponse(status=204)
+
+
+@csrf_exempt
+def post_list(request, fk):
+    """
+    List all posts for a user, or create a new post.
+    """
+    if request.method == 'GET':
+        # TODO: need Shelly to debug post get method
+        user = User(name=fk)
+        posts = Post.objects.get(shard_key=user)
+        serializer = PostSerializer(posts, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+    elif request.method == 'POST':
+        print("post post....")
+        data = JSONParser().parse(request)
+        print(data)
+        serializer = PostSerializer(data=data)
+        print(serializer)
+        if serializer.is_valid():
+            print("is valid...")
+            user = User(name=data['shard_key'])
+            post = Post(shard_key=user, content=data['content'])
+            print(post)
+            # post.save()
+            # serializer.save()
+            return JsonResponse(serializer.data, status=201)
+        return JsonResponse(serializer.errors, status=400)

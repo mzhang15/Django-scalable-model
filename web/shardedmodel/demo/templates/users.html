@@ -147,10 +147,9 @@
             </thead>
             <tbody>
               <tr v-for="user in users">
-                <!-- <th scope="row">${article.article_id}</th> -->
-                <td><a v-bind:href="/demo/posts/db1/">${user.name}</a></td>
+                <td><a href="{{this.posturl}}">${user.name}</a></td>
                 <td>
-                  <button class="btn btn-primary" v-on:click="getPosts()">Get Posts</button>
+                  <!-- <button class="btn btn-primary" v-on:click="getPosts()">Get Posts</button> -->
                 </td>
               </tr>
             </tbody>
@@ -243,6 +242,7 @@
       delimiters: ['${','}'],
       data: {
         db: null,
+        posturl: null,
         users: [],
         loading: true,
         currentUser: {'name': null},
@@ -256,7 +256,10 @@
         var currentUrl = window.location.pathname;
         var res = currentUrl.split("/");
         this.db = res[res.length - 1];
+        console.log(res[0]);
+        this.posturl = "http://127.0.0.1:8080/demo/posts/" + this.db + '/';
         console.log(this.db);
+        console.log(this.posturl);
       },
       methods: {
         getUsers: function() {
