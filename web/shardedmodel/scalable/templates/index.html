@@ -12,6 +12,9 @@
     <!-- boostrap css -->
     <style>
     /* Absolute Center Spinner */
+    .btn-reset {
+      margin: 2em;
+    }
     .loading {
     position: fixed;
     z-index: 999;
@@ -135,7 +138,8 @@
         <div class="row">
           <h1>List of Mappings</h1>
           &emsp;
-	  <button class="btn btn-info" v-on:click.prevent="resetAll">Reset All</button>
+	  <button class="btn btn-info .btn-reset" v-on:click.prevent="resetAll">Reset and Popuate</button>
+    <button class="btn btn-info .btn-reset" v-on:click.prevent="deleteAll">Reset</button>
 	  &emsp;
           <table class="table">
             <thead>
@@ -284,9 +288,21 @@
                 console.log(err);
               })
         },
-	resetAll: function() {
+	      resetAll: function() {
           this.loading = true;
           this.$http.post(`/mappings/reset-all`)
+              .then((response) => {
+                this.loading = false;
+                this.getMappings();
+              })
+              .catch((err) => {
+                this.loading = false;
+                console.log(err);
+              })
+        },
+        deleteAll: function() {
+          this.loading = true;
+          this.$http.get(`/mappings/reset-all`)
               .then((response) => {
                 this.loading = false;
                 this.getMappings();
