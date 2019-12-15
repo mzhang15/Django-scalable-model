@@ -27,8 +27,10 @@ class ResetAll(APIView):
                 model_to_del = getattr(customized_models, model)
                 model_to_del.objects.using(db).all().delete()
             if getattr(model_to_del, 'is_root'):
-                for i in range(1,50):
-                    model_to_save = model_to_del.objects.using('db1').create(pk="primary_id %s" %i)
+                for i in ['a', 'b', 'c', 'd', 'e']:
+                    for k in range(10):
+                        pkey = i + str(k)
+                        model_to_save = model_to_del.objects.using('db1').create(pk="primary_id %s" %pkey)
         return Response(status=status.HTTP_202_ACCEPTED)
 
 class MappingList(APIView):
@@ -100,7 +102,7 @@ def migration(shard_mapping_id):
             print(data)
             data.save()
 
-    time.sleep(1) # for demo use
+    time.sleep(5) # for demo use
 
     # 3. update mapping: delete original
     m_w = Mapping.objects.get(id=shard_mapping_id)
