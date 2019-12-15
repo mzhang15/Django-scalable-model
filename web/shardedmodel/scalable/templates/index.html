@@ -13,7 +13,14 @@
     <style>
     /* Absolute Center Spinner */
     .btn-reset {
-      margin: 2em;
+    margin-top: 1px;
+    margin-bottom: 1px;
+    margin-left: 500px;
+    }
+    .btn-del {
+    margin-top: 1px;
+    margin-bottom: 1px;
+    margin-left: 10px;
     }
     .loading {
     position: fixed;
@@ -139,7 +146,7 @@
           <h1>List of Mappings</h1>
           &emsp;
 	  <button class="btn btn-info btn-reset" v-on:click.prevent="resetAll">Reset and Popuate</button>
-    <button class="btn btn-info btn-reset" v-on:click.prevent="deleteAll">Reset</button>
+    <button class="btn btn-info btn-del" v-on:click.prevent="deleteAll">Reset and Delete</button>
 	  &emsp;
           <table class="table">
             <thead>
