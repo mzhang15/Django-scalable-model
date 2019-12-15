@@ -1,3 +1,5 @@
 *.pyc
 env/*
 migrations/
+*sqlite3
+web/app/*

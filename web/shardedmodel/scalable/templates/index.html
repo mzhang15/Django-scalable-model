@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Vue-js | Django | Crud App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A simple crud app made with the vue js and django">
+
+    <meta name="keywords" content="vuejs, django, crudapp, restapi">
+    <!-- bootstap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- boostrap css -->
+    <style>
+    /* Absolute Center Spinner */
+    .btn-reset {
+    margin-top: 1px;
+    margin-bottom: 1px;
+    margin-left: 500px;
+    }
+    .btn-del {
+    margin-top: 1px;
+    margin-bottom: 1px;
+    margin-left: 10px;
+    }
+    .loading {
+    position: fixed;
+    z-index: 999;
+    height: 2em;
+    width: 2em;
+    overflow: show;
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    }
+    /* Transparent Overlay */
+    .loading:before {
+    content: '';
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.3);
+    }
+    /* :not(:required) hides these rules from IE9 and below */
+    .loading:not(:required) {
+    /* hide "loading..." text */
+    font: 0/0 a;
+    color: transparent;
+    text-shadow: none;
+    background-color: transparent;
+    border: 0;
+    }
+    .loading:not(:required):after {
+    content: '';
+    display: block;
+    font-size: 10px;
+    width: 1em;
+    height: 1em;
+    margin-top: -0.5em;
+    -webkit-animation: spinner 1500ms infinite linear;
+    -moz-animation: spinner 1500ms infinite linear;
+    -ms-animation: spinner 1500ms infinite linear;
+    -o-animation: spinner 1500ms infinite linear;
+    animation: spinner 1500ms infinite linear;
+    border-radius: 0.5em;
+    -webkit-box-shadow: rgba(0, 0, 0, 0.75) 1.5em 0 0 0, rgba(0, 0, 0, 0.75) 1.1em 1.1em 0 0, rgba(0, 0, 0, 0.75) 0 1.5em 0 0, rgba(0, 0, 0, 0.75) -1.1em 1.1em 0 0, rgba(0, 0, 0, 0.5) -1.5em 0 0 0, rgba(0, 0, 0, 0.5) -1.1em -1.1em 0 0, rgba(0, 0, 0, 0.75) 0 -1.5em 0 0, rgba(0, 0, 0, 0.75) 1.1em -1.1em 0 0;
+    box-shadow: rgba(0, 0, 0, 0.75) 1.5em 0 0 0, rgba(0, 0, 0, 0.75) 1.1em 1.1em 0 0, rgba(0, 0, 0, 0.75) 0 1.5em 0 0, rgba(0, 0, 0, 0.75) -1.1em 1.1em 0 0, rgba(0, 0, 0, 0.75) -1.5em 0 0 0, rgba(0, 0, 0, 0.75) -1.1em -1.1em 0 0, rgba(0, 0, 0, 0.75) 0 -1.5em 0 0, rgba(0, 0, 0, 0.75) 1.1em -1.1em 0 0;
+    }
+    /* Animation */
+    @-webkit-keyframes spinner {
+    0% {
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+    }
+    @-moz-keyframes spinner {
+    0% {
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+    }
+    @-o-keyframes spinner {
+    0% {
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+    }
+    @keyframes spinner {
+    0% {
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+    }
+    </style>
+
+  </head>
+
+  <body>
+    <div id="starting">
+      <div class="container">
+        <div class="row">
+          <h1>List of Mappings</h1>
+          &emsp;
+	  <button class="btn btn-info btn-reset" v-on:click.prevent="resetAll">Reset and Popuate</button>
+    <button class="btn btn-info btn-del" v-on:click.prevent="deleteAll">Reset and Delete</button>
+	  &emsp;
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">from shard #</th>
+                <th scope="col">to shard #</th>
+                <th scope="col">Permissions</th>
+                <th scope="col">target 1</th>
+                <th scope="col">target 2</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="mapping in mappings">
+                <th scope="row">${mapping.id}</th>
+                <td>${mapping.min_shard}</td>
+                <td>${mapping.max_shard}</td>
+                <td>${mapping.perm}</td>
+                <td>${mapping.target1}</td>
+                <td>${mapping.target2}</td>
+                <td>
+                  <button class="btn btn-info" v-if="mapping.perm == 2" v-on:click.prevent="getMapping(mapping)" data-toggle="modal" data-target="#migrateModal">Migrate</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <!-- Edit Article Modal -->
+          <div class="modal fade" id="migrateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Migrate</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <form v-on:submit.prevent="migrate()">
+                <div class="modal-body">
+                    <div class="form-group">
+                      <label for="migrate_target">Migrate Target</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="migrate_target"
+                        placeholder="Enter Migrate Target"
+                        v-model="newTarget.migrate_target"
+                        required="required" >
+                    </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary m-progress" data-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+                </form>
+              </div>
+            </div>
+            <!-- <div class="loading" v-if="loading===true">Loading&#8230;</div> -->
+          </div>
+          <!-- End of edit article modal -->
+
+        </div>
+      </div>
+      <!-- <div class="loading" v-if="loading===true">Loading&#8230;</div> -->
+
+    </div>
+
+  <!-- bootrtap js files -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+  <!-- vue.js files -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.5"></script>
+  <script type="text/javascript">
+    Vue.http.headers.common['X-CSRFToken'] = "{{ csrf_token }}";
+    new Vue({
+      el: '#starting',
+      delimiters: ['${','}'],
+      data: {
+        mappings: [],
+        loading: true,
+        currentMapping: {},
+        message: null,
+        newTarget: { 'migrate_target': null, },
+      },
+      mounted: function() {
+        this.getMappings();
+      },
+      methods: {
+        getMappings: function() {
+          let api_url = '/mappings/'; // the '/' at the end of routes is needed for app on gcp to get api correctly
+          this.loading = true;
+          this.$http.get(api_url)
+              .then((response) => {
+                this.mappings = response.data;
+                console.log(response.data);
+                this.loading = false;
+              })
+              .catch((err) => {
+                this.loading = false;
+                console.log(err);
+              })
+        },
+        getMapping: function(mapping) {
+            this.currentMapping = mapping;
+            console.log(this.currentMapping);
+        },
+        addMapping: function(param) {
+            console.log("id: ", param.id);
+            this.$http.post('/mappings/', param)
+              .then((response) => {
+                this.loading = true;
+                this.getMappings();
+              })
+              .catch((err) => {
+                this.loading = false;
+                console.log(err);
+              })
+        },
+        updateMapping: function(param) {
+            console.log("update: ", param);
+            this.loading = true;
+            this.$http.put(`/mappings/${param.id}/`, param)
+                .then((response) => {
+                    this.loading = false;
+                    this.currentMapping = response.data;
+                    this.getMappings();
+                })
+                .catch((err) => {
+                    this.loading = false;
+                    console.log(err);
+                })
+        },
+        deleteMapping: function(id) {
+          this.loading = true;
+          this.$http.delete(`/mappings/${id}/`)
+              .then((response) => {
+                this.loading = false;
+                this.getMappings();
+              })
+              .catch((err) => {
+                this.loading = false;
+                console.log(err);
+              })
+        },
+	      resetAll: function() {
+          this.loading = true;
+          this.$http.post(`/mappings/reset-all`)
+              .then((response) => {
+                this.loading = false;
+                this.getMappings();
+              })
+              .catch((err) => {
+                this.loading = false;
+                console.log(err);
+              })
+        },
+        deleteAll: function() {
+          this.loading = true;
+          this.$http.get(`/mappings/reset-all`)
+              .then((response) => {
+                this.loading = false;
+                this.getMappings();
+              })
+              .catch((err) => {
+                this.loading = false;
+                console.log(err);
+              })
+        },
+        migrate: function() {
+            console.log(this.currentMapping);
+            let param1 = this.currentMapping;
+            let param2 = this.currentMapping;
+            let param3 = this.currentMapping;
+
+            // 1. update original mapping with the write permission
+            // param1.perm = 2;
+            param1.target2 = this.newTarget.migrate_target;
+            this.updateMapping(param2);
+
+            // 2. update original mapping for read (delete and add)
+            // this.deleteMapping(param2.id);
+            // param2.max_shard = Math.floor(param2.max_shard / 2);
+            // this.addMapping(param2);
+
+            // // 3. create a new mapping for read （change min_shard)
+            // param3.min_shard = Math.floor(param3.max_shard / 2) + 1;
+            // param3.target1 = this.newTarget.migrate_target;
+            // console.log("param3:", param3);
+            // this.addMapping(param3);
+        },
+      }
+    });
+  </script>
+  </body>
+</html>

@@ -1,6 +1,11 @@
 # Database sepecific settings.
 DATABASES = {
-  'default': { },
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'OPTIONS': {
+            'read_default_file': '/etc/mysql/my.cnf',
+        },
+    },
   'auth_db': {
     'ENGINE': 'django.db.backends.mysql',
     'NAME': 'scalica',

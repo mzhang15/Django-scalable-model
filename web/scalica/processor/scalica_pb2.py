@@ -1,1 +1,0 @@
-../../../backend/scalica_pb2.py
