@@ -135,6 +135,8 @@
         <div class="row">
           <h1>List of Mappings</h1>
           &emsp;
+	  <button class="btn btn-info" v-on:click.prevent="resetAll">Rest All</button>
+	  &emsp;
           <table class="table">
             <thead>
               <tr>
@@ -273,6 +275,18 @@
         deleteMapping: function(id) {
           this.loading = true;
           this.$http.delete(`/mappings/${id}/`)
+              .then((response) => {
+                this.loading = false;
+                this.getMappings();
+              })
+              .catch((err) => {
+                this.loading = false;
+                console.log(err);
+              })
+        },
+	resetAll: function() {
+          this.loading = true;
+          this.$http.post(`/mappings/reset-all`)
               .then((response) => {
                 this.loading = false;
                 this.getMappings();

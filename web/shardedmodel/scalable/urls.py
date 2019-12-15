@@ -5,7 +5,7 @@ from scalable import views
 urlpatterns = [
     path('mappings/', views.MappingList.as_view()),
     path('mappings/<int:pk>/', views.MappingDetail.as_view()),
-    path('mappings/delete-all', views.DeleteAll.as_view())
+    path('mappings/reset-all', views.ResetAll.as_view())
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from . import sharded_model
+from .routers import logical_shard_of, logical_to_physical
 import importlib
 import time
 
@@ -11,18 +12,23 @@ from .models import Mapping
 from .serializers import MappingSerializer
 from .utils import MappingDict
 
-class DeleteAll(APIView):
-    def get(self, request, format=None):
+class ResetAll(APIView):
+    def post(self, request, format=None):
         print(settings.DATABASES.keys())
         # delete mappings
         all_mappings = Mapping.objects.all().delete()
+        # re-initialize mapping
+        sharded_model.init_mapping()
         customized_models = importlib.import_module(settings.CUSTOMIZED_MODEL_MODULE)
         shardable_models = settings.SHARDABLE_MODELS.split(',')
+        # delete all models and populate new models
         for model in shardable_models:
             for db in settings.DATABASES.keys():
                 model_to_del = getattr(customized_models, model)
                 model_to_del.objects.using(db).all().delete()
-        sharded_model.init_mapping()
+            if getattr(model_to_del, 'is_root'):
+                for i in range(1,50):
+                    model_to_save = model_to_del.objects.using('db1').create(pk="primary_id %s" %i)
         return Response(status=status.HTTP_202_ACCEPTED)
 
 class MappingList(APIView):
@@ -75,8 +81,9 @@ class MappingDetail(APIView):
 
 # TODO: this function should be passed with a callback function
 def migration(shard_mapping_id):
-    split_db = (Mapping.objects.get(id=shard_mapping_id)).target1
-    print("start migrating from: %s to %s" % (split_db, (Mapping.objects.get(id=shard_mapping_id)).target2))
+    split_db = Mapping.objects.get(id=shard_mapping_id).target1
+    target_db = Mapping.objects.get(id=shard_mapping_id).target2
+    print("start migrating from: %s to %s" % (split_db, target_db))
     customized_models = importlib.import_module(settings.CUSTOMIZED_MODEL_MODULE)
     shardable_models = settings.SHARDABLE_MODELS.split(',')
 
@@ -93,7 +100,7 @@ def migration(shard_mapping_id):
             print(data)
             data.save()
 
-    time.sleep(20) # for demo use
+    time.sleep(1) # for demo use
 
     # 3. update mapping: delete original
     m_w = Mapping.objects.get(id=shard_mapping_id)
@@ -116,13 +123,23 @@ def migration(shard_mapping_id):
     m.save()
 
     # 4. delete 2nd half data from target1; delete 1st half data from target2
-    # for model in shardable_models:
-    #     model_to_migrate = getattr(customized_models, model)
-    #     print(model_to_migrate)
-
-    #     dataset = model_to_migrate.objects.using(split_db).all() 
-
-    #     for data in dataset:
-    #         data.save()
+    new_mapping_dict = MappingDict(Mapping.objects.all())
+    for model in shardable_models:
+        print('#########')
+        model_to_update = getattr(customized_models, model)
+        print(model_to_update)
+        origin_db_data = model_to_update.objects.using(split_db).all()
+        target_db_data = model_to_update.objects.using(target_db).all()
+        for db in [origin_db_data, target_db_data]:
+            for data in db:
+                shard_key = data.shard_key if hasattr(data, 'shard_key') else data.pk
+                write_db = logical_to_physical(logical_shard_of(shard_key), 1)
+                print("%%%%%%%%%", write_db, split_db)
+                deprecated_db = split_db if db == origin_db_data else target_db
+                if write_db != deprecated_db:
+                    print('@@@@@deleteing', shard_key, 'from ', deprecated_db)
+                    #for child class, need to filter by shard_key
+                    model_to_update.objects.using(deprecated_db).filter(pk=data.pk).delete()
+            
 
     # compare its new mapping db with current db, if different, delete
