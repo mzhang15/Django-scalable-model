@@ -14,7 +14,6 @@ from .utils import MappingDict
 
 class ResetAll(APIView):
     def post(self, request, format=None):
-        print(settings.DATABASES.keys())
         # delete mappings
         all_mappings = Mapping.objects.all().delete()
         # re-initialize mapping
@@ -31,6 +30,18 @@ class ResetAll(APIView):
                     for k in range(10):
                         pkey = i + str(k)
                         model_to_save = model_to_del.objects.using('db1').create(pk="primary_id %s" %pkey)
+        return Response(status=status.HTTP_202_ACCEPTED)
+
+    def get(self, request, format=None):
+        all_mappings = Mapping.objects.all().delete()
+        sharded_model.init_mapping()
+        customized_models = importlib.import_module(
+            settings.CUSTOMIZED_MODEL_MODULE)
+        shardable_models = settings.SHARDABLE_MODELS.split(',')
+        for model in shardable_models:
+            for db in settings.DATABASES.keys():
+                model_to_del = getattr(customized_models, model)
+                model_to_del.objects.using(db).all().delete()
         return Response(status=status.HTTP_202_ACCEPTED)
 
 class MappingList(APIView):
