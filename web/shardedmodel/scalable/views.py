@@ -5,8 +5,12 @@ from rest_framework.response import Response
 from rest_framework import status
 from . import sharded_model
 from .routers import logical_shard_of, logical_to_physical
+
 import importlib
 import time
+import random
+
+from demo.models import User, Post
 
 from .models import Mapping
 from .serializers import MappingSerializer
@@ -18,18 +22,20 @@ class ResetAll(APIView):
         all_mappings = Mapping.objects.all().delete()
         # re-initialize mapping
         sharded_model.init_mapping()
+        # delete all objects
         customized_models = importlib.import_module(settings.CUSTOMIZED_MODEL_MODULE)
         shardable_models = settings.SHARDABLE_MODELS.split(',')
-        # delete all models and populate new models
         for model in shardable_models:
             for db in settings.DATABASES.keys():
                 model_to_del = getattr(customized_models, model)
                 model_to_del.objects.using(db).all().delete()
-            if getattr(model_to_del, 'is_root'):
-                for i in ['a', 'b', 'c', 'd', 'e']:
-                    for k in range(10):
-                        pkey = i + str(k)
-                        model_to_save = model_to_del.objects.using('db1').create(pk="primary_id%s" %pkey)
+        for i in ['Jack', 'Mengyang', 'Ziyao', 'Shelly', 'Bob', 'Alice']:
+            u = User(name=i)
+            u.save()
+            comment_list = ['Yeah!', 'Sure.', 'OK', 'Wow!', 'Hey!', 'Now?', 'What?', 'Apple', 'Banana', 'Orange', 'Peach', 'No!', 'Yooooo']
+            for i in range(5):
+                p = Post(shard_key=u, content=random.choice(comment_list))
+                p.save()
         return Response(status=status.HTTP_202_ACCEPTED)
 
     def get(self, request, format=None):
