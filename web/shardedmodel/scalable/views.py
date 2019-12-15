@@ -29,7 +29,7 @@ class ResetAll(APIView):
                 for i in ['a', 'b', 'c', 'd', 'e']:
                     for k in range(10):
                         pkey = i + str(k)
-                        model_to_save = model_to_del.objects.using('db1').create(pk="primary_id %s" %pkey)
+                        model_to_save = model_to_del.objects.using('db1').create(pk="primary_id%s" %pkey)
         return Response(status=status.HTTP_202_ACCEPTED)
 
     def get(self, request, format=None):

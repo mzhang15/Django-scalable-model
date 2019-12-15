@@ -57,6 +57,7 @@ class ShardRouter(object):
                 db =self._database_of([instance.shard_key_id], hints['op_type'])
         except KeyError:
             try:
+                print('child model, shard_by:', hints['shard_by'])
                 db = self._database_of(hints['shard_by'], hints['op_type'])
             except KeyError:
                 print("key error, returning default db") ##

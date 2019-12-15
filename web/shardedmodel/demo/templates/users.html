@@ -147,7 +147,7 @@
             </thead>
             <tbody>
               <tr v-for="user in users">
-                <td><a href="{{this.posturl}}">${user.name}</a></td>
+	        <td><a v-bind:href="user.url">${user.name}</a></td>
                 <td>
                   <!-- <button class="btn btn-primary" v-on:click="getPosts()">Get Posts</button> -->
                 </td>
@@ -267,7 +267,13 @@
           this.loading = true;
           this.$http.get(api_url)
               .then((response) => {
-                this.users = response.data;
+		      this.users = response.data.map((val, ind) => {
+			      const currentUrl = window.location.pathname;
+			      const posturl = "http://35.223.59.213:8080/demo/posts/" + val.name;
+			      val.url = posturl
+			      console.log(val);
+			      return val;
+		      });
                 this.loading = false;
               })
               .catch((err) => {

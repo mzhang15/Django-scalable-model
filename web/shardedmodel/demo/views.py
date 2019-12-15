@@ -69,17 +69,14 @@ def post_list(request, fk):
         return JsonResponse(serializer.data, safe=False)
 
     elif request.method == 'POST':
-        print("post post....")
-        data = JSONParser().parse(request)
-        print(data)
-        serializer = PostSerializer(data=data)
-        print(serializer)
-        if serializer.is_valid():
-            print("is valid...")
-            user = User(name=data['shard_key'])
+        try:
+            print("post post....")
+            data = JSONParser().parse(request)
+            print(data)
+            user = User.objects.get(name=data['shard_key'])
+            user.save()
             post = Post(shard_key=user, content=data['content'])
-            print(post)
-            # post.save()
-            # serializer.save()
-            return JsonResponse(serializer.data, status=201)
-        return JsonResponse(serializer.errors, status=400)
+            post.save()
+            return JsonResponse(data, status=201)
+        except:
+            return JsonResponse('Error when creating post', status=400)

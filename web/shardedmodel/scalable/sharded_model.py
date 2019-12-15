@@ -22,7 +22,6 @@ class ShardManager(models.Manager):
         except KeyError:
             print('Get query must include the shard_key')
             return
-
         queryset = super()._queryset_class(model=self.model, using=db, hints=self._hints)
         queries = queryset.values()
         u = None
