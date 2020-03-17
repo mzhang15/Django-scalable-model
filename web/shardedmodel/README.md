@@ -89,14 +89,14 @@ Go to http://35.223.59.213:8080/demo/users/db1
 There should be 6 users with randomly generated posts in db1.
 You can see their posts by clicking on their names
 
-  - 3. Go to db2 display page to see all data stored in db2:
+    - 3. Go to db2 display page to see all data stored in db2:
 Click on the Database 2 link on webpage or 
 Go to http://35.223.59.213:8080/demo/users/db2
  
 There should be no users
 
 
-  - 4. Go to the mapping page and click on migrate button to initiate a migration.
+    - 4. Go to the mapping page and click on migrate button to initiate a migration.
 Type db2 as the target db and click save changes in the modal:
 
   - 5. Now the Mapping table shows the read and write state of dbs during migration:
