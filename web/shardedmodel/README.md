@@ -79,8 +79,8 @@ The code for getting post also uses the real get method of Post.objects with sha
 
 
 - d. Let’s do a sharding migration
-  - 1. Go to the mapping page and click Reset and Populate to reset mappings and data in all dbs
-http://35.223.59.213:8080/mapping
+
+  - 1. Go to the mapping page and click Reset and Populate to reset mappings and data in all dbs http://35.223.59.213:8080/mapping
 
   - 2. Go to db1 display page to see all data stored in db1: 
 Click on the Database 1 link on webpage or
